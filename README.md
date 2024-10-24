@@ -4,6 +4,8 @@ A simple weather application.
 
 ## Development
 
+Design: [Weather App | Template](https://www.figma.com/community/file/1177627357046864157).
+
 ### Tools
 
 * Flutter 3.24.3
