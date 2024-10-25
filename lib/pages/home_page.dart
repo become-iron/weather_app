@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/services/weather_service.dart';
+import 'package:weather_app/utils/common.dart';
 import 'package:weather_app/widgets/details_card.dart' show DetailsCard;
 import 'package:weather_app/widgets/forecasting_card.dart' show ForecastingCard;
 
@@ -10,6 +12,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    determinePosition().then((position) async {
+      print('Position: $position');
+      final data = await WeatherService.getWeatherData(position);
+      print(data);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

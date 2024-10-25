@@ -19,3 +19,11 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `dart fix --apply` - apply automated fixes to Dart source code.
 * `flutter test` - run Flutter unit tests.
 * `flutter build apk --split-per-abi` - build an APK.
+
+### Initial setup
+
+1. Create a file with environment variables and fill it with the correct values.
+
+    ```shell
+    cp .env.example .env.local
+    ```
