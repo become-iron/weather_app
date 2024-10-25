@@ -1,3 +1,4 @@
+// ignore_for_file: non_constant_identifier_names
 // ignore: unused_import
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
