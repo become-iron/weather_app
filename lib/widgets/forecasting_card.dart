@@ -7,6 +7,10 @@ import 'package:weather_app/services/weather_service/models/five_day_forecast.da
     show ForecastResponse;
 import 'package:weather_app/widgets/frosted.dart' show FrostedCard;
 
+const rowsNumber = 3;
+const columnsNumbers = 4;
+const itemsNumber = rowsNumber * columnsNumbers;
+
 class WeatherData {
   final String date;
   final int temperature;
@@ -26,21 +30,7 @@ class ForecastingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<WeatherData> processedWeatherData = [];
-
-    for (final item in weather.list.sublist(0, 12)) {
-      final date = DateTime.fromMillisecondsSinceEpoch(
-        item.dt * 1000,
-        isUtc: true,
-      ).toLocal();
-      processedWeatherData.add(WeatherData(
-        date: DateFormat.Hm().format(date),
-        temperature: item.main.temp.round(),
-        icon: const Icon(Symbols.cloudy),
-      ));
-    }
-
-    final chunks = processedWeatherData.slices(4).toList();
+    final chunks = getGridItems().slices(columnsNumbers);
 
     return FrostedCard(
       child: Padding(
@@ -78,5 +68,19 @@ class ForecastingCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Iterable<WeatherData> getGridItems() sync* {
+    for (final item in weather.list.sublist(0, itemsNumber)) {
+      final date = DateTime.fromMillisecondsSinceEpoch(
+        item.dt * 1000,
+        isUtc: true,
+      ).toLocal();
+      yield WeatherData(
+        date: DateFormat.Hm().format(date),
+        temperature: item.main.temp.round(),
+        icon: const Icon(Symbols.cloudy),
+      );
+    }
   }
 }
