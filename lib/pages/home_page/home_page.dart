@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
       //   toolbarHeight: 0,
       //   backgroundColor: Colors.transparent,
       // ),
+      // TODO: make it scrollable
       body: Container(
         padding: EdgeInsets.fromLTRB(
           16,

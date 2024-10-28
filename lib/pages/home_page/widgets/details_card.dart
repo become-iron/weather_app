@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:material_symbols_icons/symbols.dart' show Symbols;
 import 'package:weather_app/pages/home_page/configs.dart'
     show countryCodesToNames;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
+import 'package:weather_app/services/weather_service/utils.dart'
+    show weatherCodeToIcon;
 import 'package:weather_app/utils/common.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
@@ -20,9 +21,9 @@ class DetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentWeather = weather.list[0];
+    final icon = weatherCodeToIcon(currentWeather.weather[0].id);
     final temperature = formatTemperature(currentWeather.main.temp);
     final temperatureFeel = formatTemperature(currentWeather.main.feels_like);
-    // final location = weather.city.name;
     final countryName =
         countryCodesToNames[weather.city.country] ?? weather.city.country;
     final location = '$countryName, ${weather.city.name}';
@@ -54,8 +55,8 @@ class DetailsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Symbols.cloudy,
+                Icon(
+                  icon,
                   size: 80,
                 ),
                 const SizedBox(width: 8),

@@ -2,9 +2,10 @@ import 'package:collection/collection.dart'
     show IterableExtension, IterableIterableExtension;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:material_symbols_icons/symbols.dart' show Symbols;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
+import 'package:weather_app/services/weather_service/utils.dart'
+    show weatherCodeToIcon;
 import 'package:weather_app/utils/common.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
@@ -78,7 +79,7 @@ class ForecastingCard extends StatelessWidget {
       yield WeatherData(
         date: dateTimeDisplayFormat.format(parseUnixTimestamp(item.dt)),
         temperature: formatTemperature(item.main.temp),
-        icon: const Icon(Symbols.cloudy), // TODO
+        icon: Icon(weatherCodeToIcon(item.weather[0].id)),
       );
     }
   }
