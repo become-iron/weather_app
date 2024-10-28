@@ -1,4 +1,5 @@
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart'
+    show Position, LocationPermission, Geolocator;
 
 Future<Position> determinePosition() async {
   bool serviceEnabled;

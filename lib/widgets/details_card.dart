@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
-import 'package:weather_app/widgets/frosted.dart' show FrostedCard;
+import 'package:material_symbols_icons/symbols.dart' show Symbols;
+import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
 class DetailsCard extends StatelessWidget {
   const DetailsCard({super.key});

@@ -13,6 +13,19 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * Java: Oracle OpenJDK 23.0.1
 * Gradle 8.10.2
 
+#### Libraries
+
+* `material_symbols_icons` - Google Material Symbols Icons.
+* `google_fonts` - Google Fonts.
+* `geolocator` - geolocation plugin.
+* `http` - HTTP requests.
+* `flutter_dotenv` - load configuration from a .env file.
+* `freezed` with `json_serializable` - immutable serializable data models.
+
+#### Services
+
+* [OpenWeatherMap API](https://openweathermap.org/api) - weather APIs.
+
 ### Commands
 
 * `flutter analyze` - analyze the project's Dart code.
@@ -20,6 +33,11 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `dart run build_runner build` - run build scripts (e.g., generate freezed models).
 * `flutter test` - run Flutter unit tests.
 * `flutter build apk --split-per-abi` - build an APK.
+
+### Environment variables
+
+* `WEATHER_SERVICE_APP_ID` - an application id to use OpenWeatherMap API.
+
 
 ### Initial setup
 
