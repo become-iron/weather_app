@@ -27,7 +27,8 @@ class DetailsCard extends StatelessWidget {
     final countryName =
         countryCodesToNames[weather.city.country] ?? weather.city.country;
     final location = '$countryName, ${weather.city.name}';
-    final dateTime = dateTimeFormat.format(DateTime.now());
+    final dateTime =
+        dateTimeFormat.format(parseUnixTimestamp(currentWeather.dt));
     final sunsetTime =
         sunsetTimeFormat.format(parseUnixTimestamp(weather.city.sunset));
 
@@ -38,12 +39,13 @@ class DetailsCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Today',
+                  dateTime,
+                  // 'Today',
                   // style: theme.textTheme.titleMedium,
                   style: TextStyle(fontSize: 24),
                 ),
@@ -76,8 +78,8 @@ class DetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(location),
-            const SizedBox(height: 8),
-            Text(dateTime),
+            // const SizedBox(height: 8),
+            // Text(dateTime),
             const SizedBox(height: 8),
             Text('Feels like $temperatureFeel | Sunset $sunsetTime'),
           ],

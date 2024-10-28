@@ -1,5 +1,5 @@
 // source: https://developer.accuweather.com/countries-by-region
-Map<String, String> countryCodesToNames = {
+const Map<String, String> countryCodesToNames = {
   'AF': 'Afghanistan',
   'AL': 'Albania',
   'DZ': 'Algeria',
