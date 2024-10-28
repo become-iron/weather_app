@@ -10,6 +10,7 @@ import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 const rowsNumber = 3;
 const columnsNumbers = 4;
 const itemsNumber = rowsNumber * columnsNumbers;
+final dateTimeDisplayFormat = DateFormat.Hm();
 
 class WeatherData {
   final String date;
@@ -72,15 +73,23 @@ class ForecastingCard extends StatelessWidget {
 
   Iterable<WeatherData> getGridItems() sync* {
     for (final item in weather.list.sublist(0, itemsNumber)) {
-      final date = DateTime.fromMillisecondsSinceEpoch(
-        item.dt * 1000,
-        isUtc: true,
-      ).toLocal();
       yield WeatherData(
-        date: DateFormat.Hm().format(date),
+        date: formatDateTime(item.dt),
         temperature: item.main.temp.round(),
-        icon: const Icon(Symbols.cloudy),
+        icon: const Icon(Symbols.cloudy), // TODO
       );
     }
+  }
+
+  /// Formats a given UNIX UTC-based timestamp
+  /// to a local time string in "HH:mm" format.
+  ///
+  /// - [dateTime]: An integer representing the UNIX timestamp (in seconds).
+  String formatDateTime(int dateTime) {
+    final date = DateTime.fromMillisecondsSinceEpoch(
+      dateTime * 1000,
+      isUtc: true,
+    ).toLocal();
+    return dateTimeDisplayFormat.format(date);
   }
 }
