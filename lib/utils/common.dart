@@ -37,3 +37,11 @@ Future<Position> determinePosition() async {
   // continue accessing the position of the device.
   return await Geolocator.getCurrentPosition();
 }
+
+/// - [dateTime]: An integer representing the UNIX timestamp (in seconds).
+DateTime parseUnixTimestamp(int dateTime) {
+  return DateTime.fromMillisecondsSinceEpoch(
+    dateTime * 1000,
+    isUtc: true,
+  ).toLocal();
+}

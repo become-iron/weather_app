@@ -5,8 +5,8 @@ import 'package:weather_app/pages/home_page/configs.dart'
     show countryCodesToNames;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
-import 'package:weather_app/utils/ui.dart'
-    show formatTemperature, parseUnixTimestamp;
+import 'package:weather_app/utils/common.dart' show parseUnixTimestamp;
+import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
 final dateTimeFormat = DateFormat.yMMMd();

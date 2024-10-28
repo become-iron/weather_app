@@ -5,8 +5,8 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
-import 'package:weather_app/utils/ui.dart'
-    show formatTemperature, parseUnixTimestamp;
+import 'package:weather_app/utils/common.dart' show parseUnixTimestamp;
+import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
 const rowsNumber = 3;
