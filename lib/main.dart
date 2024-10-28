@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/pages/home_page.dart';
+import 'package:weather_app/pages/home_page/home_page.dart';
 
 // const defaultTextColor = Color(0xFFC9E8E0);
 const defaultTextColor = Color(0xFFD8F8EF);

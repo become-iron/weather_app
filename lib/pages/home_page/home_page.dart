@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/pages/home_page/widgets/details_card.dart'
+    show DetailsCard;
+import 'package:weather_app/pages/home_page/widgets/forecasting_card.dart'
+    show ForecastingCard;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart';
 import 'package:weather_app/services/weather_service/weather_service.dart'
     show WeatherService;
 import 'package:weather_app/utils/common.dart' show determinePosition;
-import 'package:weather_app/widgets/details_card.dart' show DetailsCard;
-import 'package:weather_app/widgets/forecasting_card.dart' show ForecastingCard;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
