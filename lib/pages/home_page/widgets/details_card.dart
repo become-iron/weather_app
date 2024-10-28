@@ -10,7 +10,8 @@ import 'package:weather_app/utils/common.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
-final dateTimeFormat = DateFormat.yMMMd();
+final fullDateFormat = DateFormat.yMMMd();
+final relatedDateDefaultFormat = DateFormat.MMMMd();
 final sunsetTimeFormat = DateFormat.Hm();
 
 class DetailsCard extends StatelessWidget {
@@ -27,8 +28,11 @@ class DetailsCard extends StatelessWidget {
     final countryName =
         countryCodesToNames[weather.city.country] ?? weather.city.country;
     final location = '$countryName, ${weather.city.name}';
-    final dateTime =
-        dateTimeFormat.format(parseUnixTimestamp(currentWeather.dt));
+
+    final rawDateTime = parseUnixTimestamp(currentWeather.dt);
+    final fullDate = fullDateFormat.format(rawDateTime);
+    final relatedDate = getRelatedDate(rawDateTime);
+
     final sunsetTime =
         sunsetTimeFormat.format(parseUnixTimestamp(weather.city.sunset));
 
@@ -44,10 +48,9 @@ class DetailsCard extends StatelessWidget {
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  dateTime,
-                  // 'Today',
+                  relatedDate,
                   // style: theme.textTheme.titleMedium,
-                  style: TextStyle(fontSize: 24),
+                  style: const TextStyle(fontSize: 24),
                 ),
                 // TODO
                 // SizedBox(width: 16),
@@ -78,13 +81,34 @@ class DetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(location),
-            // const SizedBox(height: 8),
-            // Text(dateTime),
+            const SizedBox(height: 8),
+            Text(fullDate),
             const SizedBox(height: 8),
             Text('Feels like $temperatureFeel | Sunset $sunsetTime'),
           ],
         ),
       ),
     );
+  }
+
+  // based on: https://stackoverflow.com/a/74345643/4729582
+  String getRelatedDate(DateTime dateTime) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+    final tomorrow = DateTime(now.year, now.month, now.day + 1);
+
+    String result;
+    final checkDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    if (checkDate == today) {
+      result = 'Today';
+    } else if (checkDate == yesterday) {
+      result = 'Yesterday';
+    } else if (checkDate == tomorrow) {
+      result = 'Tomorrow';
+    } else {
+      result = relatedDateDefaultFormat.format(dateTime);
+    }
+    return result;
   }
 }
