@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
+import 'package:weather_app/pages/home_page/configs.dart'
+    show countryCodesToNames;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
 import 'package:weather_app/utils/ui.dart'
@@ -21,7 +23,9 @@ class DetailsCard extends StatelessWidget {
     final temperature = formatTemperature(currentWeather.main.temp);
     final temperatureFeel = formatTemperature(currentWeather.main.feels_like);
     // final location = weather.city.name;
-    final location = '${weather.city.country}, ${weather.city.name}';
+    final countryName =
+        countryCodesToNames[weather.city.country] ?? weather.city.country;
+    final location = '$countryName, ${weather.city.name}';
     final dateTime = dateTimeFormat.format(DateTime.now());
     final sunsetTime =
         sunsetTimeFormat.format(parseUnixTimestamp(weather.city.sunset));
