@@ -5,6 +5,8 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
+import 'package:weather_app/utils/ui.dart'
+    show formatTemperature, parseUnixTimestamp;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
 const rowsNumber = 3;
@@ -14,7 +16,7 @@ final dateTimeDisplayFormat = DateFormat.Hm();
 
 class WeatherData {
   final String date;
-  final int temperature;
+  final String temperature;
   final Icon icon;
 
   const WeatherData({
@@ -52,7 +54,7 @@ class ForecastingCard extends StatelessWidget {
                             children: [
                               data.icon,
                               const SizedBox(width: 4),
-                              Text('${data.temperature}')
+                              Text(data.temperature)
                             ],
                           ),
                         ],
@@ -74,22 +76,10 @@ class ForecastingCard extends StatelessWidget {
   Iterable<WeatherData> getGridItems() sync* {
     for (final item in weather.list.sublist(0, itemsNumber)) {
       yield WeatherData(
-        date: formatDateTime(item.dt),
-        temperature: item.main.temp.round(),
+        date: dateTimeDisplayFormat.format(parseUnixTimestamp(item.dt)),
+        temperature: formatTemperature(item.main.temp),
         icon: const Icon(Symbols.cloudy), // TODO
       );
     }
-  }
-
-  /// Formats a given UNIX UTC-based timestamp
-  /// to a local time string in "HH:mm" format.
-  ///
-  /// - [dateTime]: An integer representing the UNIX timestamp (in seconds).
-  String formatDateTime(int dateTime) {
-    final date = DateTime.fromMillisecondsSinceEpoch(
-      dateTime * 1000,
-      isUtc: true,
-    ).toLocal();
-    return dateTimeDisplayFormat.format(date);
   }
 }

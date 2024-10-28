@@ -2,8 +2,8 @@ import 'dart:convert' show jsonDecode;
 
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:http/http.dart' as http;
-import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
-    show ForecastResponse;
+
+import './models/five_day_forecast.dart' show ForecastResponse;
 
 // Docs:
 // https://openweathermap.org/forecast5
@@ -15,7 +15,10 @@ class WeatherService {
   static final client = http.Client();
   static const weatherServiceHost = 'api.openweathermap.org';
 
-  static Future<ForecastResponse> getWeatherData(Position position) async {
+  static Future<ForecastResponse> getWeatherData({
+    required Position position,
+    int count = 12,
+  }) async {
     // TODO: temp
     return ForecastResponse.fromJson(responseDump);
     // final http.Response response;
@@ -28,7 +31,7 @@ class WeatherService {
     //       'lon': '${position.longitude}',
     //       'appid': appConfig.weatherService.appId,
     //       'units': 'metric',
-    //       'cnt': '12',
+    //       'cnt': '${count}',
     //     },
     //   ));
     // } finally {

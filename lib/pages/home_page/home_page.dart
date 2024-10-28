@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/pages/home_page/widgets/details_card.dart'
-    show DetailsCard;
-import 'package:weather_app/pages/home_page/widgets/forecasting_card.dart'
-    show ForecastingCard;
-import 'package:weather_app/services/weather_service/models/five_day_forecast.dart';
+import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
+    show ForecastResponse;
 import 'package:weather_app/services/weather_service/weather_service.dart'
     show WeatherService;
 import 'package:weather_app/utils/common.dart' show determinePosition;
+
+import './widgets/details_card.dart' show DetailsCard;
+import './widgets/forecasting_card.dart' show ForecastingCard;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,16 +47,14 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const DetailsCard(),
-              const SizedBox(height: 24),
-              if (weather != null) ForecastingCard(weather: weather!),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // TODO: use skeletons
+            if (weather != null) DetailsCard(weather: weather!),
+            const SizedBox(height: 24),
+            if (weather != null) ForecastingCard(weather: weather!),
+          ],
         ),
       ),
     );
@@ -64,7 +62,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchWeather() async {
     final position = await determinePosition();
-    final weather_ = await WeatherService.getWeatherData(position);
+    final weather_ = await WeatherService.getWeatherData(position: position);
 
     setState(() {
       weather = weather_;
