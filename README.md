@@ -1,16 +1,82 @@
 # weather_app
 
-A new Flutter project.
+A simple weather application.
 
-## Getting Started
+## Development
 
-This project is a starting point for a Flutter application.
+Design: [Weather App | Template](https://www.figma.com/community/file/1177627357046864157).
 
-A few resources to get you started if this is your first Flutter project:
+### Tools
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* Flutter 3.24.3
+* Dart 3.5.3
+* Java: Oracle OpenJDK 23.0.1
+* Gradle 8.10.2
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Libraries
+
+* `material_symbols_icons` - Google Material Symbols Icons.
+* `google_fonts` - Google Fonts.
+* `geolocator` - geolocation plugin.
+* `http` - HTTP requests.
+* `flutter_dotenv` - load configuration from a .env file.
+* `freezed` with `json_serializable` - immutable serializable data models.
+
+#### Services
+
+* [OpenWeatherMap API](https://openweathermap.org/api) - weather APIs.
+
+### Commands
+
+* `flutter analyze` - analyze the project's Dart code.
+* `dart fix --apply` - apply automated fixes to Dart source code.
+* `dart run build_runner build` - run build scripts (e.g., generate freezed models).
+* `flutter test` - run Flutter unit tests.
+* `flutter build apk --split-per-abi` - build an APK.
+
+### Environment variables
+
+* `WEATHER_SERVICE_APP_ID` - an application id to use OpenWeatherMap API.
+
+
+### Initial setup
+
+1. Create a file with environment variables and fill it with the correct values.
+
+    ```shell
+    cp .env.example .env.local
+    ```
+
+2. Generate auxiliary files.
+
+    ```shell
+    dart run build_runner build
+    ```
+
+#### Android Studio setup (optional)
+
+* Hide generated files: https://stackoverflow.com/a/69728616/4729582.
+* Add a live template to generate freezed models:
+
+    ```dart
+    @freezed
+    class $NAME$ with _$$$NAME$ {
+      const factory $NAME$({
+        $END$,
+      }) = _$NAME$;
+
+      factory $NAME$.fromJson(Map<String, Object?> json) => _$$$NAME$FromJson(json);
+    }
+    ```
+
+## TODO
+
+* On start show cached data
+* Use skeletons?
+* Add a gesture to update data
+* Add ability to view details for each piece of data
+* Make layout scrollable and responsive
+* Add ability to change theme
+* Update icon
+* Handle requests errors
+* Display appropriate messages when user hasn't given permissions to get location
