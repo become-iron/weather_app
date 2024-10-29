@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' show IconData;
-import 'package:material_symbols_icons/material_symbols_icons.dart'
-    show Symbols;
+import 'package:material_symbols_icons/symbols.dart' show Symbols;
 
 // source: https://openweathermap.org/weather-conditions
 // TODO: there are no icons for all weather conditions

@@ -5,7 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/pages/home_page/home_page.dart';
 
-// const defaultTextColor = Color(0xFFC9E8E0);
 const defaultTextColor = Color(0xFFD8F8EF);
 
 void main() async {
@@ -33,7 +32,6 @@ class WeatherApp extends StatelessWidget {
           useMaterial3: true,
           textTheme: GoogleFonts.poppinsTextTheme().apply(
             bodyColor: defaultTextColor,
-            // displayColor: Colors.white,
           ),
           cardTheme: const CardTheme(
             elevation: 0,

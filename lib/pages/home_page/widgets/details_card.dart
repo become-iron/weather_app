@@ -41,15 +41,12 @@ class DetailsCard extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   relatedDate,
-                  // style: theme.textTheme.titleMedium,
                   style: const TextStyle(fontSize: 24),
                 ),
                 // TODO

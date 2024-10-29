@@ -29,10 +29,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   toolbarHeight: 0,
-      //   backgroundColor: Colors.transparent,
-      // ),
       // TODO: make it scrollable
       body: Container(
         padding: EdgeInsets.fromLTRB(
