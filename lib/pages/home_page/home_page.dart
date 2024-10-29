@@ -6,7 +6,7 @@ import 'package:weather_app/services/weather_service/weather_service.dart'
 import 'package:weather_app/utils/common.dart' show determinePosition;
 
 import './widgets/details_card.dart' show DetailsCard;
-import './widgets/forecasting_card.dart' show ForecastingCard;
+import './widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
 
 class HomePage extends StatefulWidget {
   final WeatherService weatherService;
@@ -72,7 +72,11 @@ class _HomePageState extends State<HomePage> {
     }
 
     final position = await determinePosition();
-    weather_ = await widget.weatherService.getWeatherData(position: position);
+    weather_ = await widget.weatherService.getWeatherData(
+      position: position,
+      // TODO: temp
+      count: itemsNumber,
+    );
 
     setState(() {
       weather = weather_;

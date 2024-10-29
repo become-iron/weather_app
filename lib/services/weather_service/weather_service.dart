@@ -42,7 +42,7 @@ class WeatherService {
 
   Future<ForecastResponse> getWeatherData({
     required Position position,
-    int count = 12,
+    int? count,
   }) async {
     // TODO: temp
     // return ForecastResponse.fromJson(responseDump);
@@ -56,7 +56,7 @@ class WeatherService {
           'lon': '${position.longitude}',
           'appid': appConfig.weatherService.appId,
           'units': 'metric',
-          'cnt': '$count',
+          if (count != null) 'cnt': '$count',
         },
       ));
     } finally {

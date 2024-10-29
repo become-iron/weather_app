@@ -33,7 +33,7 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `dart fix --apply` - apply automated fixes to Dart source code.
 * `dart run build_runner build` - run build scripts (e.g., generate freezed models).
 * `flutter test` - run Flutter unit tests.
-* `flutter build apk --split-per-abi` - build an APK.
+* `flutter build apk --split-per-abi` - build APKs.
 
 ### Environment variables
 
@@ -80,3 +80,4 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * Update icon
 * Handle requests errors
 * Display appropriate messages when user hasn't given permissions to get location
+* Write tests
