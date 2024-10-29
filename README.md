@@ -79,3 +79,4 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * Add ability to change theme
 * Update icon
 * Handle requests errors
+* Display appropriate messages when user hasn't given permissions to get location
