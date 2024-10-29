@@ -2,9 +2,8 @@ import 'dart:convert' show jsonDecode;
 
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:http/http.dart' as http;
-// TODO: use SharedPreferencesAsync
 import 'package:shared_preferences/shared_preferences.dart'
-    show SharedPreferences;
+    show SharedPreferencesAsync;
 import 'package:weather_app/configs/app_config.dart' show appConfig;
 
 import './models/five_day_forecast.dart' show ForecastResponse;
@@ -21,19 +20,21 @@ class WeatherService {
 
   Future<void> init() async {
     final config = appConfig.weatherService;
-    final cache = await SharedPreferences.getInstance();
+    final storage = SharedPreferencesAsync();
     final String? formatVersion =
-        cache.getString(config.dataFormatVersionStorageKey);
+        await storage.getString(config.dataFormatVersionStorageKey);
     if (formatVersion != config.dataFormatVersion) {
-      print('Remove cached weather data since it has different format version');
-      cache.remove(config.storageKey);
+      // TODO: use logging
+      print('Remove cached weather data since it has different format version. '
+          'Stored: $formatVersion. Current: ${config.dataFormatVersion}');
+      await storage.remove(config.storageKey);
     }
   }
 
   Future<ForecastResponse?> getCachedWeatherData() async {
     final config = appConfig.weatherService;
-    final cache = await SharedPreferences.getInstance();
-    final String? cachedData = cache.getString(config.storageKey);
+    final storage = SharedPreferencesAsync();
+    final String? cachedData = await storage.getString(config.storageKey);
     return cachedData == null
         ? null
         : ForecastResponse.fromJson(jsonDecode(cachedData));
@@ -63,9 +64,9 @@ class WeatherService {
     }
 
     final config = appConfig.weatherService;
-    final cache = await SharedPreferences.getInstance();
-    cache.setString(config.storageKey, response.body);
-    cache.setString(
+    final storage = SharedPreferencesAsync();
+    await storage.setString(config.storageKey, response.body);
+    await storage.setString(
       config.dataFormatVersionStorageKey,
       config.dataFormatVersion,
     );
