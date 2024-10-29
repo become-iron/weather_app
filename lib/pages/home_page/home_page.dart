@@ -9,21 +9,26 @@ import './widgets/details_card.dart' show DetailsCard;
 import './widgets/forecasting_card.dart' show ForecastingCard;
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final WeatherService weatherService;
+
+  const HomePage({super.key, required this.weatherService});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  ForecastResponse? weather;
+
   @override
   void initState() {
     super.initState();
-
-    fetchWeather();
+    initStateAsync();
   }
 
-  ForecastResponse? weather;
+  Future<void> initStateAsync() async {
+    await fetchWeather();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +63,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchWeather() async {
+    ForecastResponse? weather_ =
+        await widget.weatherService.getCachedWeatherData();
+    if (weather_ != null) {
+      setState(() {
+        weather = weather_;
+      });
+    }
+
     final position = await determinePosition();
-    final weather_ = await WeatherService.getWeatherData(position: position);
+    weather_ = await widget.weatherService.getWeatherData(position: position);
 
     setState(() {
       weather = weather_;

@@ -21,6 +21,7 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `http` - HTTP requests.
 * `flutter_dotenv` - load configuration from a .env file.
 * `freezed` with `json_serializable` - immutable serializable data models.
+* `shared_preferences` - persistent storage for simple data.
 
 #### Services
 
@@ -71,7 +72,6 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 
 ## TODO
 
-* On start show cached data
 * Use skeletons?
 * Add a gesture to update data
 * Add ability to view details for each piece of data
