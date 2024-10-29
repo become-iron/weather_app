@@ -58,8 +58,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchWeather() async {
+    ForecastResponse? weather_ = await WeatherService.getCachedWeatherData();
+    if (weather_ != null) {
+      setState(() {
+        weather = weather_;
+      });
+    }
+
     final position = await determinePosition();
-    final weather_ = await WeatherService.getWeatherData(position: position);
+    weather_ = await WeatherService.getWeatherData(position: position);
 
     setState(() {
       weather = weather_;
