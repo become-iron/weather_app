@@ -22,11 +22,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    initStateAsync();
+  }
 
+  Future<void> initStateAsync() async {
     // TODO: probably initialization should be done in the root component?
-    weatherService.init().then((_) {
-      fetchWeather();
-    });
+    await weatherService.init();
+    await fetchWeather();
   }
 
   @override
