@@ -84,10 +84,11 @@ class WeatherTile extends StatelessWidget {
         Text(data.date),
         const SizedBox(height: 4),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Icon(data.icon),
             const SizedBox(width: 4),
-            Text(data.temperature)
+            Text(data.temperature),
           ],
         ),
       ],
