@@ -6,21 +6,27 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'app_config.freezed.dart';
 
 @freezed
-class WeatherServiceConfig with _$WeatherServiceConfig {
-  const factory WeatherServiceConfig({
-    required String appId,
-  }) = _WeatherServiceConfig;
-}
-
-@freezed
 class AppConfig with _$AppConfig {
   const factory AppConfig({
-    required WeatherServiceConfig weatherService,
+    required AppConfig$WeatherService weatherService,
   }) = _AppConfig;
 }
 
+@freezed
+class AppConfig$WeatherService with _$AppConfig$WeatherService {
+  const factory AppConfig$WeatherService({
+    required String appId,
+    required String dataFormatVersion,
+    required String dataFormatVersionStorageKey,
+    required String storageKey,
+  }) = _AppConfig$WeatherService;
+}
+
 final appConfig = AppConfig(
-  weatherService: WeatherServiceConfig(
+  weatherService: AppConfig$WeatherService(
     appId: dotenv.get('WEATHER_SERVICE_APP_ID'),
+    dataFormatVersion: '0',
+    dataFormatVersionStorageKey: 'dataFormatVersion',
+    storageKey: 'weatherData',
   ),
 );

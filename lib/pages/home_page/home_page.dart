@@ -16,14 +16,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final weatherService = WeatherService();
+  ForecastResponse? weather;
+
   @override
   void initState() {
     super.initState();
 
-    fetchWeather();
+    // TODO: probably initialization should be done in the root component?
+    weatherService.init().then((_) {
+      fetchWeather();
+    });
   }
-
-  ForecastResponse? weather;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchWeather() async {
-    ForecastResponse? weather_ = await WeatherService.getCachedWeatherData();
+    ForecastResponse? weather_ = await weatherService.getCachedWeatherData();
     if (weather_ != null) {
       setState(() {
         weather = weather_;
@@ -66,7 +70,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     final position = await determinePosition();
-    weather_ = await WeatherService.getWeatherData(position: position);
+    weather_ = await weatherService.getWeatherData(position: position);
 
     setState(() {
       weather = weather_;
