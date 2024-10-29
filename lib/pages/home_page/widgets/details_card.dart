@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:weather_app/pages/home_page/configs.dart'
+import 'package:weather_app/services/weather_service/configs.dart'
     show countryCodesToNames;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
