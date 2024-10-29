@@ -3,6 +3,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart'
     show Symbols;
 
 // source: https://openweathermap.org/weather-conditions
+// TODO: there are no icons for all weather conditions
 IconData weatherCodeToIcon(int code) {
   return switch (code) {
     >= 200 && <= 232 => Symbols.thunderstorm,

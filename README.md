@@ -68,3 +68,14 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
       factory $NAME$.fromJson(Map<String, Object?> json) => _$$$NAME$FromJson(json);
     }
     ```
+
+## TODO
+
+* On start show cached data
+* Use skeletons?
+* Add a gesture to update data
+* Add ability to view details for each piece of data
+* Make layout scrollable and responsive
+* Add ability to change theme
+* Update icon
+* Handle requests errors
