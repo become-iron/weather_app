@@ -10,15 +10,17 @@ import 'package:weather_app/utils/common.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
+// TODO: do not hardcode these values, but rather make the layout responsive
 const rowsNumber = 3;
 const columnsNumbers = 4;
 const itemsNumber = rowsNumber * columnsNumbers;
+
 final dateTimeDisplayFormat = DateFormat.Hm();
 
 class WeatherData {
   final String date;
   final String temperature;
-  final Icon icon;
+  final IconData icon;
 
   const WeatherData({
     required this.date,
@@ -45,22 +47,7 @@ class ForecastingCard extends StatelessWidget {
               [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    for (var data in chunk)
-                      Column(
-                        children: [
-                          Text(data.date),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              data.icon,
-                              const SizedBox(width: 4),
-                              Text(data.temperature)
-                            ],
-                          ),
-                        ],
-                      ),
-                  ],
+                  children: [for (var data in chunk) WeatherTile(data: data)],
                 ),
                 if (i < chunks.length - 1)
                   Padding(
@@ -79,8 +66,32 @@ class ForecastingCard extends StatelessWidget {
       yield WeatherData(
         date: dateTimeDisplayFormat.format(parseUnixTimestamp(item.dt)),
         temperature: formatTemperature(item.main.temp),
-        icon: Icon(weatherCodeToIcon(item.weather[0].id)),
+        icon: weatherCodeToIcon(item.weather[0].id),
       );
     }
+  }
+}
+
+class WeatherTile extends StatelessWidget {
+  final WeatherData data;
+
+  const WeatherTile({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(data.date),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(data.icon),
+            const SizedBox(width: 4),
+            Text(data.temperature),
+          ],
+        ),
+      ],
+    );
   }
 }

@@ -6,7 +6,7 @@ import 'package:weather_app/services/weather_service/weather_service.dart'
 import 'package:weather_app/utils/common.dart' show determinePosition;
 
 import './widgets/details_card.dart' show DetailsCard;
-import './widgets/forecasting_card.dart' show ForecastingCard;
+import './widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
 
 class HomePage extends StatefulWidget {
   final WeatherService weatherService;
@@ -36,6 +36,9 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       // TODO: make it scrollable
       body: Container(
+        // to get rid of the white area at the bottom of screen
+        // when there a little number of items
+        height: double.infinity,
         padding: EdgeInsets.fromLTRB(
           16,
           // consider the height of system status bar
@@ -49,14 +52,19 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // TODO: use skeletons
-            if (weather != null) DetailsCard(weather: weather!),
-            const SizedBox(height: 24),
-            if (weather != null) ForecastingCard(weather: weather!),
-          ],
+        child: SingleChildScrollView(
+          // set to disable background color change on debouncing
+          // https://stackoverflow.com/a/66688501/4729582
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // TODO: use skeletons
+              if (weather != null) DetailsCard(weather: weather!),
+              const SizedBox(height: 24),
+              if (weather != null) ForecastingCard(weather: weather!),
+            ],
+          ),
         ),
       ),
     );
@@ -72,7 +80,11 @@ class _HomePageState extends State<HomePage> {
     }
 
     final position = await determinePosition();
-    weather_ = await widget.weatherService.getWeatherData(position: position);
+    weather_ = await widget.weatherService.getWeatherData(
+      position: position,
+      // TODO: temp
+      count: itemsNumber,
+    );
 
     setState(() {
       weather = weather_;
