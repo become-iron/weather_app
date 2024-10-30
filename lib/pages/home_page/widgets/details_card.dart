@@ -33,8 +33,11 @@ class DetailsCard extends StatelessWidget {
     final fullDate = fullDateFormat.format(rawDateTime);
     final relatedDate = getRelatedDate(rawDateTime);
 
-    final sunsetTime =
-        sunsetTimeFormat.format(parseUnixTimestamp(weather.city.sunset));
+    final tzOffset = weather.city.timezone;
+    final sunriseTime = sunsetTimeFormat
+        .format(parseUnixTimestamp(weather.city.sunrise - tzOffset));
+    final sunsetTime = sunsetTimeFormat
+        .format(parseUnixTimestamp(weather.city.sunset - tzOffset));
 
     return FrostedCard(
       child: Padding(
@@ -54,6 +57,8 @@ class DetailsCard extends StatelessWidget {
                 // Icon(Symbols.keyboard_arrow_down),
               ],
             ),
+            const SizedBox(height: 4),
+            Text(fullDate, style: const TextStyle(fontSize: 12)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -68,20 +73,31 @@ class DetailsCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              weatherCondition.label,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  weatherCondition.label,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Feels like $temperatureFeel',
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Text(location),
             const SizedBox(height: 8),
-            Text(fullDate),
-            const SizedBox(height: 8),
-            Text('Feels like $temperatureFeel | Sunset $sunsetTime'),
+            Text(
+              'Sunrise $sunriseTime | Sunset $sunsetTime',
+              style: const TextStyle(fontSize: 12),
+            ),
           ],
         ),
       ),
