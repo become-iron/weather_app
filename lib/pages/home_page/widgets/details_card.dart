@@ -22,9 +22,11 @@ class DetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentWeather = weather.list[0];
+
     final weatherCondition = parseWeatherCode(currentWeather.weather[0].id);
     final temperature = formatTemperature(currentWeather.main.temp);
     final temperatureFeel = formatTemperature(currentWeather.main.feels_like);
+
     final countryName =
         countryCodesToNames[weather.city.country] ?? weather.city.country;
     final location = '$countryName, ${weather.city.name}';
@@ -33,11 +35,8 @@ class DetailsCard extends StatelessWidget {
     final fullDate = fullDateFormat.format(rawDateTime);
     final relatedDate = getRelatedDate(rawDateTime);
 
-    final tzOffset = weather.city.timezone;
-    final sunriseTime = sunsetTimeFormat
-        .format(parseUnixTimestamp(weather.city.sunrise - tzOffset));
-    final sunsetTime = sunsetTimeFormat
-        .format(parseUnixTimestamp(weather.city.sunset - tzOffset));
+    final sunriseTime = formatSunTime(weather.city.sunrise);
+    final sunsetTime = formatSunTime(weather.city.sunset);
 
     return FrostedCard(
       child: Padding(
@@ -123,5 +122,14 @@ class DetailsCard extends StatelessWidget {
       result = relatedDateDefaultFormat.format(dateTime);
     }
     return result;
+  }
+
+  String formatSunTime(int timestamp) {
+    final tzOffset = Duration(seconds: weather.city.timezone);
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(
+      (timestamp) * 1000,
+      isUtc: true,
+    ).add(tzOffset);
+    return sunsetTimeFormat.format(dateTime);
   }
 }
