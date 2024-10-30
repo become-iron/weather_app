@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' show Position;
+import 'package:material_symbols_icons/symbols.dart' show Symbols;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
 import 'package:weather_app/services/weather_service/weather_service.dart'
     show WeatherService;
 import 'package:weather_app/utils/location.dart'
-    show LocationException, determinePosition;
+    show LocationException, checkLocationPermissions, determinePosition;
 
 import 'widgets/details_card.dart' show DetailsCard;
-import 'widgets/exception_message.dart' show ExceptionMessage;
 import 'widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
+import 'widgets/message_card.dart' show MessageCard;
 
 class HomePage extends StatefulWidget {
   final WeatherService weatherService;
@@ -21,15 +22,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  MessageData? message;
   Position? position;
   ForecastResponse? weather;
-  LocationException? exception;
   int activeWeatherItemIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    initStateAsync();
+    initStateAsync().catchError((e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error occurred: $e'),
+        ),
+      );
+    });
   }
 
   @override
@@ -42,7 +50,11 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (exception != null) ExceptionMessage(exception: exception!),
+          if (message != null)
+            MessageCard(
+              icon: message!.icon,
+              message: message!.message,
+            ),
           // TODO: use skeletons
           if (weather != null)
             DetailsCard(
@@ -105,15 +117,34 @@ class _HomePageState extends State<HomePage> {
     }
 
     try {
-      position = await determinePosition();
+      await checkLocationPermissions();
     } on LocationException catch (e) {
       setState(() {
-        exception = e;
+        message = MessageData(
+          icon: const Icon(Symbols.error),
+          message: e.message,
+        );
       });
       return;
     }
 
-    await fetchWeather();
+    position = await handleLongTask(
+      determinePosition(),
+      const MessageData(
+        icon: Icon(Symbols.pending),
+        message: 'We are trying to determine your location. '
+            'This is taking longer than usual.',
+      ),
+    );
+
+    await handleLongTask(
+      fetchWeather(),
+      const MessageData(
+        icon: Icon(Symbols.pending),
+        message: 'We are trying to request the weather. '
+            'This is taking longer than usual.',
+      ),
+    );
   }
 
   Future<void> fetchWeather() async {
@@ -132,4 +163,55 @@ class _HomePageState extends State<HomePage> {
       activeWeatherItemIndex = 0;
     });
   }
+
+  /// Executes a long-running task and updates the UI with a message if it
+  /// exceeds a specified duration.
+  ///
+  /// [future] the long-running task to execute.
+  /// [message_] the message data to display if the task takes too long.
+  /// [waitFor] specifies the delay in seconds before displaying
+  /// the message.
+  ///
+  /// Returns the result of the [future] once completed.
+  ///
+  /// This function waits for the specified [waitFor] duration. If the task is
+  /// still running after this delay, it displays the message on the UI. Once
+  /// the task completes, it removes the message.
+  Future<T> handleLongTask<T>(
+    Future<T> future,
+    MessageData message_, {
+    int waitFor = 2,
+  }) async {
+    final symbol = UniqueKey();
+    final result = await Future.any([
+      future,
+      Future.delayed(
+        Duration(seconds: waitFor),
+        () => symbol,
+      ),
+    ]);
+    if (result == symbol) {
+      setState(() {
+        message = message_;
+      });
+    }
+
+    try {
+      return await future;
+    } finally {
+      setState(() {
+        message = null;
+      });
+    }
+  }
+}
+
+class MessageData {
+  final Widget icon;
+  final String message;
+
+  const MessageData({
+    required this.icon,
+    required this.message,
+  });
 }
