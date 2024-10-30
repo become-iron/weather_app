@@ -76,9 +76,8 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * Use skeletons?
 * Add a gesture to update data
 * Add ability to view details for each piece of data
-* Make layout scrollable and responsive
+* Make layout responsive
 * Add ability to change theme
 * Update icon
 * Handle requests errors
-* Display appropriate messages when user hasn't given permissions to get location
 * Write tests

@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart'
 import 'package:weather_app/configs/app_config.dart' show appConfig;
 import 'package:weather_app/utils/logger.dart' show logger;
 
-import './models/five_day_forecast.dart' show ForecastResponse;
+import 'models/five_day_forecast.dart' show ForecastResponse;
 
 // Docs:
 // https://openweathermap.org/forecast5

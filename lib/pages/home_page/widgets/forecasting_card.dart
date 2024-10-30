@@ -6,7 +6,7 @@ import 'package:weather_app/services/weather_service/models/five_day_forecast.da
     show ForecastResponse;
 import 'package:weather_app/services/weather_service/utils.dart'
     show weatherCodeToIcon;
-import 'package:weather_app/utils/common.dart' show parseUnixTimestamp;
+import 'package:weather_app/utils/time.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
@@ -40,7 +40,7 @@ class ForecastingCard extends StatelessWidget {
 
     return FrostedCard(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             for (final (i, chunk) in chunks.indexed)

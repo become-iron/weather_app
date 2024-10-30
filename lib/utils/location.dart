@@ -1,5 +1,33 @@
 import 'package:geolocator/geolocator.dart'
-    show Position, LocationPermission, Geolocator;
+    show Geolocator, LocationPermission, Position;
+
+enum LocationExceptionType {
+  serviceDisabled,
+  permissionDenied,
+  permissionPermanentlyDenied;
+}
+
+class LocationException implements Exception {
+  final LocationExceptionType type;
+  const LocationException(this.type);
+
+  String get message {
+    return switch (type) {
+      LocationExceptionType.serviceDisabled =>
+        'Location services are disabled.',
+      LocationExceptionType.permissionDenied =>
+        'Location permissions are denied.',
+      LocationExceptionType.permissionPermanentlyDenied =>
+        'Location permissions are permanently denied. '
+            'We cannot re-request them.',
+    };
+  }
+
+  @override
+  String toString() {
+    return message;
+  }
+}
 
 Future<Position> determinePosition() async {
   bool serviceEnabled;
@@ -11,7 +39,7 @@ Future<Position> determinePosition() async {
     // Location services are not enabled don't continue
     // accessing the position and request users of the
     // App to enable the location services.
-    return Future.error('Location services are disabled.');
+    throw const LocationException(LocationExceptionType.serviceDisabled);
   }
 
   permission = await Geolocator.checkPermission();
@@ -23,25 +51,18 @@ Future<Position> determinePosition() async {
       // Android's shouldShowRequestPermissionRationale
       // returned true. According to Android guidelines
       // your App should show an explanatory UI now.
-      return Future.error('Location permissions are denied');
+      throw const LocationException(LocationExceptionType.permissionDenied);
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
     // Permissions are denied forever, handle appropriately.
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
+    throw const LocationException(
+      LocationExceptionType.permissionPermanentlyDenied,
+    );
   }
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
   return await Geolocator.getCurrentPosition();
-}
-
-/// - [dateTime]: An integer representing the UNIX timestamp (in seconds).
-DateTime parseUnixTimestamp(int dateTime) {
-  return DateTime.fromMillisecondsSinceEpoch(
-    dateTime * 1000,
-    isUtc: true,
-  ).toLocal();
 }
