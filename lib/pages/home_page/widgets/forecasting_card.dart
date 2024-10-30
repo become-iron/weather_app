@@ -5,7 +5,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
 import 'package:weather_app/services/weather_service/utils.dart'
-    show weatherCodeToIcon;
+    show parseWeatherCode;
 import 'package:weather_app/utils/time.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
@@ -63,10 +63,11 @@ class ForecastingCard extends StatelessWidget {
 
   Iterable<WeatherData> getGridItems() sync* {
     for (final item in weather.list.sublist(0, itemsNumber)) {
+      final weatherCondition = parseWeatherCode(item.weather[0].id);
       yield WeatherData(
         date: dateTimeDisplayFormat.format(parseUnixTimestamp(item.dt)),
         temperature: formatTemperature(item.main.temp),
-        icon: weatherCodeToIcon(item.weather[0].id),
+        icon: weatherCondition.icon,
       );
     }
   }

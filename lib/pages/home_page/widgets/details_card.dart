@@ -5,7 +5,7 @@ import 'package:weather_app/services/weather_service/configs.dart'
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
 import 'package:weather_app/services/weather_service/utils.dart'
-    show weatherCodeToIcon;
+    show parseWeatherCode;
 import 'package:weather_app/utils/time.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
@@ -22,7 +22,7 @@ class DetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentWeather = weather.list[0];
-    final icon = weatherCodeToIcon(currentWeather.weather[0].id);
+    final weatherCondition = parseWeatherCode(currentWeather.weather[0].id);
     final temperature = formatTemperature(currentWeather.main.temp);
     final temperatureFeel = formatTemperature(currentWeather.main.feels_like);
     final countryName =
@@ -58,7 +58,7 @@ class DetailsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  icon,
+                  weatherCondition.icon,
                   size: 80,
                 ),
                 const SizedBox(width: 8),
@@ -69,9 +69,9 @@ class DetailsCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Snowy',
-              style: TextStyle(
+            Text(
+              weatherCondition.label,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
