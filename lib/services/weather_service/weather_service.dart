@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferencesAsync;
 import 'package:weather_app/configs/app_config.dart' show appConfig;
+import 'package:weather_app/utils/logger.dart' show logger;
 
 import './models/five_day_forecast.dart' show ForecastResponse;
 
@@ -24,9 +25,10 @@ class WeatherService {
     final String? formatVersion =
         await storage.getString(config.dataFormatVersionStorageKey);
     if (formatVersion != config.dataFormatVersion) {
-      // TODO: use logging
-      print('Remove cached weather data since it has different format version. '
-          'Stored: $formatVersion. Current: ${config.dataFormatVersion}');
+      logger.d(
+        'Remove cached weather data since it has different format version. '
+        'Stored: $formatVersion. Current: ${config.dataFormatVersion}',
+      );
       await storage.remove(config.storageKey);
     }
   }
