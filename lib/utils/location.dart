@@ -1,5 +1,10 @@
 import 'package:geolocator/geolocator.dart'
-    show Geolocator, LocationPermission, Position;
+    show
+        Geolocator,
+        LocationAccuracy,
+        LocationPermission,
+        LocationSettings,
+        Position;
 
 enum LocationExceptionType {
   serviceDisabled,
@@ -64,5 +69,11 @@ Future<Position> determinePosition() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-  return await Geolocator.getCurrentPosition();
+  return await Geolocator.getCurrentPosition(
+    locationSettings: const LocationSettings(
+      // Low accuracy location is sufficient for the needs of the application.
+      // Also, its acquisition should be faster.
+      accuracy: LocationAccuracy.low,
+    ),
+  );
 }

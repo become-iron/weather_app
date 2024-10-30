@@ -5,6 +5,6 @@ final logger = Logger(
     printEmojis: false,
     noBoxingByDefault: true,
     dateTimeFormat: DateTimeFormat.dateAndTime,
-    methodCount: 1,
+    methodCount: 0,
   ),
 );

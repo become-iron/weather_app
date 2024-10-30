@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   Position? position;
   ForecastResponse? weather;
   LocationException? exception;
+  int activeWeatherItemIndex = 0;
 
   @override
   void initState() {
@@ -43,9 +44,22 @@ class _HomePageState extends State<HomePage> {
         children: [
           if (exception != null) ExceptionMessage(exception: exception!),
           // TODO: use skeletons
-          if (weather != null) DetailsCard(weather: weather!),
+          if (weather != null)
+            DetailsCard(
+              weather: weather!,
+              activeItemIndex: activeWeatherItemIndex,
+            ),
           const SizedBox(height: 24),
-          if (weather != null) ForecastingCard(weather: weather!),
+          if (weather != null)
+            ForecastingCard(
+              weather: weather!,
+              activeItemIndex: activeWeatherItemIndex,
+              onActiveItemChange: (index) {
+                setState(() {
+                  activeWeatherItemIndex = index;
+                });
+              },
+            ),
         ],
       ),
     );
@@ -115,6 +129,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       weather = weather_;
+      activeWeatherItemIndex = 0;
     });
   }
 }

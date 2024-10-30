@@ -5,7 +5,7 @@ import 'package:weather_app/services/weather_service/configs.dart'
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
 import 'package:weather_app/services/weather_service/utils.dart'
-    show weatherCodeToIcon;
+    show parseWeatherCode;
 import 'package:weather_app/utils/time.dart' show parseUnixTimestamp;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
@@ -16,15 +16,22 @@ final sunsetTimeFormat = DateFormat.Hm();
 
 class DetailsCard extends StatelessWidget {
   final ForecastResponse weather;
+  final int activeItemIndex;
 
-  const DetailsCard({super.key, required this.weather});
+  const DetailsCard({
+    super.key,
+    required this.weather,
+    required this.activeItemIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final currentWeather = weather.list[0];
-    final icon = weatherCodeToIcon(currentWeather.weather[0].id);
+    final currentWeather = weather.list[activeItemIndex];
+
+    final weatherCondition = parseWeatherCode(currentWeather.weather[0].id);
     final temperature = formatTemperature(currentWeather.main.temp);
     final temperatureFeel = formatTemperature(currentWeather.main.feels_like);
+
     final countryName =
         countryCodesToNames[weather.city.country] ?? weather.city.country;
     final location = '$countryName, ${weather.city.name}';
@@ -33,8 +40,8 @@ class DetailsCard extends StatelessWidget {
     final fullDate = fullDateFormat.format(rawDateTime);
     final relatedDate = getRelatedDate(rawDateTime);
 
-    final sunsetTime =
-        sunsetTimeFormat.format(parseUnixTimestamp(weather.city.sunset));
+    final sunriseTime = formatSunTime(weather.city.sunrise);
+    final sunsetTime = formatSunTime(weather.city.sunset);
 
     return FrostedCard(
       child: Padding(
@@ -54,11 +61,13 @@ class DetailsCard extends StatelessWidget {
                 // Icon(Symbols.keyboard_arrow_down),
               ],
             ),
+            const SizedBox(height: 4),
+            Text(fullDate, style: const TextStyle(fontSize: 12)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  icon,
+                  weatherCondition.icon,
                   size: 80,
                 ),
                 const SizedBox(width: 8),
@@ -68,20 +77,31 @@ class DetailsCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Snowy',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  weatherCondition.label,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Feels like $temperatureFeel',
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Text(location),
             const SizedBox(height: 8),
-            Text(fullDate),
-            const SizedBox(height: 8),
-            Text('Feels like $temperatureFeel | Sunset $sunsetTime'),
+            Text(
+              'Sunrise $sunriseTime | Sunset $sunsetTime',
+              style: const TextStyle(fontSize: 12),
+            ),
           ],
         ),
       ),
@@ -107,5 +127,14 @@ class DetailsCard extends StatelessWidget {
       result = relatedDateDefaultFormat.format(dateTime);
     }
     return result;
+  }
+
+  String formatSunTime(int timestamp) {
+    final tzOffset = Duration(seconds: weather.city.timezone);
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(
+      (timestamp) * 1000,
+      isUtc: true,
+    ).add(tzOffset);
+    return sunsetTimeFormat.format(dateTime);
   }
 }
