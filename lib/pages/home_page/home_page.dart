@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart' show Position;
 import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
     show ForecastResponse;
 import 'package:weather_app/services/weather_service/weather_service.dart'
     show WeatherService;
-import 'package:weather_app/utils/common.dart' show determinePosition;
+import 'package:weather_app/utils/location.dart'
+    show LocationException, determinePosition;
 
-import './widgets/details_card.dart' show DetailsCard;
-import './widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
+import 'widgets/details_card.dart' show DetailsCard;
+import 'widgets/exception_message.dart' show ExceptionMessage;
+import 'widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
 
 class HomePage extends StatefulWidget {
   final WeatherService weatherService;
@@ -19,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ForecastResponse? weather;
+  LocationException? exception;
 
   @override
   void initState() {
@@ -59,6 +63,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if (exception != null) ExceptionMessage(exception: exception!),
               // TODO: use skeletons
               if (weather != null) DetailsCard(weather: weather!),
               const SizedBox(height: 24),
@@ -79,7 +84,16 @@ class _HomePageState extends State<HomePage> {
       });
     }
 
-    final position = await determinePosition();
+    final Position? position;
+    try {
+      position = await determinePosition();
+    } on LocationException catch (e) {
+      setState(() {
+        exception = e;
+      });
+      return;
+    }
+
     weather_ = await widget.weatherService.getWeatherData(
       position: position,
       // TODO: temp
