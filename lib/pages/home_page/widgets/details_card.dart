@@ -16,12 +16,17 @@ final sunsetTimeFormat = DateFormat.Hm();
 
 class DetailsCard extends StatelessWidget {
   final ForecastResponse weather;
+  final int activeItemIndex;
 
-  const DetailsCard({super.key, required this.weather});
+  const DetailsCard({
+    super.key,
+    required this.weather,
+    required this.activeItemIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final currentWeather = weather.list[0];
+    final currentWeather = weather.list[activeItemIndex];
 
     final weatherCondition = parseWeatherCode(currentWeather.weather[0].id);
     final temperature = formatTemperature(currentWeather.main.temp);

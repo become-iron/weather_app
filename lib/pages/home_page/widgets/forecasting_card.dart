@@ -31,8 +31,15 @@ class WeatherData {
 
 class ForecastingCard extends StatelessWidget {
   final ForecastResponse weather;
+  final int activeItemIndex;
+  final void Function(int index) onActiveItemChange;
 
-  const ForecastingCard({super.key, required this.weather});
+  const ForecastingCard({
+    super.key,
+    required this.weather,
+    required this.activeItemIndex,
+    required this.onActiveItemChange,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +47,27 @@ class ForecastingCard extends StatelessWidget {
 
     return FrostedCard(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           children: [
             for (final (i, chunk) in chunks.indexed)
               [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [for (var data in chunk) WeatherTile(data: data)],
+                  children: [
+                    for (final (j, data) in chunk.indexed)
+                      WeatherTile(
+                        data: data,
+                        active: activeItemIndex == i * columnsNumbers + j,
+                        onActivate: () {
+                          onActiveItemChange(i * columnsNumbers + j);
+                        },
+                      ),
+                  ],
                 ),
                 if (i < chunks.length - 1)
                   Padding(
-                    padding: const EdgeInsets.only(top: 12, bottom: 12),
+                    padding: const EdgeInsets.only(top: 4, bottom: 4),
                     child: Divider(color: Colors.white.withOpacity(0.5)),
                   ),
               ]
@@ -75,24 +91,44 @@ class ForecastingCard extends StatelessWidget {
 
 class WeatherTile extends StatelessWidget {
   final WeatherData data;
+  final bool active;
+  final void Function() onActivate;
 
-  const WeatherTile({super.key, required this.data});
+  const WeatherTile({
+    super.key,
+    required this.data,
+    required this.active,
+    required this.onActivate,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(data.date),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(data.icon),
-            const SizedBox(width: 4),
-            Text(data.temperature),
-          ],
+    final borderRadius = BorderRadius.circular(8);
+
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: InkWell(
+        onTap: onActivate,
+        borderRadius: borderRadius,
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          color: active ? Colors.white.withOpacity(0.1) : null,
+          child: Column(
+            children: [
+              Text(data.date),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(data.icon),
+                  const SizedBox(width: 4),
+                  Text(data.temperature),
+                ],
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }

@@ -74,9 +74,9 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 ## TODO
 
 * Use skeletons?
-* Add ability to view details for each piece of data
 * Make layout responsive
 * Add ability to change theme
 * Update icon
 * Handle requests errors
 * Write tests
+* currently, the API request doesn't return the current weather, so workaround it someway
