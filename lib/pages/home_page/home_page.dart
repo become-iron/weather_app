@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Position? position;
   ForecastResponse? weather;
   LocationException? exception;
 
@@ -30,12 +31,25 @@ class _HomePageState extends State<HomePage> {
     initStateAsync();
   }
 
-  Future<void> initStateAsync() async {
-    await fetchWeather();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final content = SingleChildScrollView(
+      // set physics to show refresh indicator
+      // even if content is less than viewport
+      // https://api.flutter.dev/flutter/material/RefreshIndicator-class.html#refresh-indicator-does-not-show-up
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (exception != null) ExceptionMessage(exception: exception!),
+          // TODO: use skeletons
+          if (weather != null) DetailsCard(weather: weather!),
+          const SizedBox(height: 24),
+          if (weather != null) ForecastingCard(weather: weather!),
+        ],
+      ),
+    );
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       // TODO: make it scrollable
@@ -56,35 +70,26 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: SingleChildScrollView(
-          // set to disable background color change on debouncing
-          // https://stackoverflow.com/a/66688501/4729582
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (exception != null) ExceptionMessage(exception: exception!),
-              // TODO: use skeletons
-              if (weather != null) DetailsCard(weather: weather!),
-              const SizedBox(height: 24),
-              if (weather != null) ForecastingCard(weather: weather!),
-            ],
-          ),
-        ),
+        child:
+            // disable refresh gesture if there is no position
+            position == null
+                ? content
+                : RefreshIndicator(
+                    onRefresh: fetchWeather,
+                    child: content,
+                  ),
       ),
     );
   }
 
-  Future<void> fetchWeather() async {
-    ForecastResponse? weather_ =
-        await widget.weatherService.getCachedWeatherData();
+  Future<void> initStateAsync() async {
+    final weather_ = await widget.weatherService.getCachedWeatherData();
     if (weather_ != null) {
       setState(() {
         weather = weather_;
       });
     }
 
-    final Position? position;
     try {
       position = await determinePosition();
     } on LocationException catch (e) {
@@ -94,8 +99,16 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    weather_ = await widget.weatherService.getWeatherData(
-      position: position,
+    await fetchWeather();
+  }
+
+  Future<void> fetchWeather() async {
+    if (position == null) {
+      return;
+    }
+
+    final weather_ = await widget.weatherService.getWeatherData(
+      position: position!,
       // TODO: temp
       count: itemsNumber,
     );
