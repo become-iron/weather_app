@@ -1,3 +1,6 @@
+import 'dart:async' show TimeoutException;
+import 'dart:io' show Platform;
+
 import 'package:geolocator/geolocator.dart'
     show
         Geolocator,
@@ -5,6 +8,8 @@ import 'package:geolocator/geolocator.dart'
         LocationPermission,
         LocationSettings,
         Position;
+
+import 'logger.dart' show logger;
 
 enum LocationExceptionType {
   serviceDisabled,
@@ -34,7 +39,7 @@ class LocationException implements Exception {
   }
 }
 
-Future<Position> determinePosition() async {
+Future<void> checkLocationPermissions() async {
   bool serviceEnabled;
   LocationPermission permission;
 
@@ -66,13 +71,44 @@ Future<Position> determinePosition() async {
       LocationExceptionType.permissionPermanentlyDenied,
     );
   }
+}
 
+Future<Position> determinePosition() async {
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
+  try {
+    return await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        // Low accuracy location is sufficient for the needs of the application.
+        // Also, its acquisition should be faster.
+        accuracy: LocationAccuracy.low,
+        timeLimit: Duration(seconds: 10),
+      ),
+    );
+  } on TimeoutException {
+    // ignore timeout exception
+  }
+
+  logger.d('Time limit exceeded. Try to get last known position instead.');
+  Position? position = await Geolocator.getLastKnownPosition();
+  if (position != null) {
+    return position;
+  }
+
+  if (Platform.isAndroid) {
+    // try again but with old Android LocationManager implementation
+    position = await Geolocator.getLastKnownPosition(
+      forceAndroidLocationManager: true,
+    );
+    if (position != null) {
+      return position;
+    }
+  }
+
+  logger.d('There is no last known position. '
+      'Try to get the position again the usual way.');
   return await Geolocator.getCurrentPosition(
     locationSettings: const LocationSettings(
-      // Low accuracy location is sufficient for the needs of the application.
-      // Also, its acquisition should be faster.
       accuracy: LocationAccuracy.low,
     ),
   );

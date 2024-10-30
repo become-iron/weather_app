@@ -77,6 +77,7 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * Make layout responsive
 * Add ability to change theme
 * Update icon
-* Handle requests errors
 * Write tests
-* currently, the API request doesn't return the current weather, so workaround it someway
+* Currently, the API request doesn't return the current weather, so workaround it someway
+* Use some library to manage app state?
+* Add animations when card appear/disappear?
