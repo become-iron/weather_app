@@ -38,8 +38,8 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 
 ### Environment variables
 
-* `WEATHER_SERVICE_APP_ID` - an application id to use OpenWeatherMap API.
-
+* `WEATHER_SERVICE_APP_ID` - an application id to use OpenWeatherMap API (not safe in terms of
+  security).
 
 ### Initial setup
 
@@ -74,7 +74,6 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 ## TODO
 
 * Use skeletons?
-* Add a gesture to update data
 * Add ability to view details for each piece of data
 * Make layout responsive
 * Add ability to change theme

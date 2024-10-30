@@ -1,4 +1,4 @@
-import 'dart:ui' as ui;
+// import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
@@ -14,13 +14,17 @@ class FrostedCard extends StatelessWidget {
     // based on: https://www.youtube.com/watch?app=desktop&v=vIjyphym6Ck
     return Card(
       color: theme.cardTheme.color!.withOpacity(0.8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: child,
-        ),
-      ),
+      child: child,
+      // disable blur since it works incorrectly
+      // with SingleChildScrollView and ListView
+      // https://stackoverflow.com/a/66688501/4729582
+      // child: ClipRRect(
+      //   borderRadius: BorderRadius.circular(12),
+      //   child: BackdropFilter(
+      //     filter: ui.ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      //     child: child,
+      //   ),
+      // ),
     );
   }
 }
