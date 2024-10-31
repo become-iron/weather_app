@@ -1,4 +1,4 @@
-import 'package:weather_app/utils/time.dart';
+import 'package:weather_app/utils/time.dart' show parseUnixTimestamp;
 
 import '../configs.dart' show countryCodesToNames;
 import '../utils.dart' show WeatherCondition, parseWeatherCode;

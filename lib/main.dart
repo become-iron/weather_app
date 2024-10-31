@@ -1,9 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart'
+    show LicenseRegistry, LicenseEntryWithLineBreaks;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
-import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/pages/home_page/home_page.dart';
+import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
+
+import 'pages/home_page/home_page.dart' show HomePage;
 
 const defaultTextColor = Color(0xFFD8F8EF);
 
