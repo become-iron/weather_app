@@ -14,18 +14,7 @@ const itemsNumber = rowsNumber * columnsNumbers;
 
 final dateTimeDisplayFormat = DateFormat.Hm();
 
-// TODO: use record instead
-class TileData {
-  final String date;
-  final String temperature;
-  final IconData icon;
-
-  const TileData({
-    required this.date,
-    required this.temperature,
-    required this.icon,
-  });
-}
+typedef TileData = ({String date, String temperature, IconData icon});
 
 class ForecastingCard extends StatelessWidget {
   final WeatherData weather;
@@ -77,7 +66,7 @@ class ForecastingCard extends StatelessWidget {
 
   Iterable<TileData> getGridItems() sync* {
     for (final item in weather.data.sublist(0, itemsNumber)) {
-      yield TileData(
+      yield (
         date: dateTimeDisplayFormat.format(item.dateTime),
         temperature: formatTemperature(item.temperature),
         icon: item.weatherCondition.icon,
