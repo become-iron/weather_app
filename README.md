@@ -81,3 +81,4 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * Currently, the API request doesn't return the current weather, so workaround it someway
 * Use some library to manage app state?
 * Add animations when card appear/disappear?
+* Add CI

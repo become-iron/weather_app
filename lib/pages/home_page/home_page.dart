@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
-import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
-    show ForecastResponse;
+import 'package:weather_app/services/weather_service/models/weather_data.dart'
+    show WeatherData;
 import 'package:weather_app/services/weather_service/weather_service.dart'
     show WeatherService;
 import 'package:weather_app/utils/location.dart'
@@ -26,7 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   MessageData? message;
   Position? position;
-  ForecastResponse? weather;
+  WeatherData? weather;
   int activeWeatherItemIndex = 0;
 
   @override
@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
             position == null
                 ? content
                 : RefreshIndicator(
+                    // TODO: display message on error
                     onRefresh: fetchWeather,
                     child: content,
                   ),
@@ -111,12 +112,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> initStateAsync() async {
-    final weather_ = await widget.weatherService.getCachedWeatherData();
-    if (weather_ != null) {
-      setState(() {
-        weather = weather_;
-      });
-    }
+    // final weather_ = await widget.weatherService.getCachedWeatherData();
+    // if (weather_ != null) {
+    //   setState(() {
+    //     weather = weather_;
+    //   });
+    // }
 
     try {
       await checkLocationPermissions();

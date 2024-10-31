@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:weather_app/services/weather_service/configs.dart'
-    show countryCodesToNames;
-import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
-    show ForecastResponse;
-import 'package:weather_app/services/weather_service/utils.dart'
-    show parseWeatherCode;
-import 'package:weather_app/utils/time.dart' show parseUnixTimestamp;
+import 'package:weather_app/services/weather_service/models/weather_data.dart'
+    show WeatherData;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
@@ -15,7 +10,7 @@ final relatedDateDefaultFormat = DateFormat.MMMMd();
 final sunsetTimeFormat = DateFormat.Hm();
 
 class DetailsCard extends StatelessWidget {
-  final ForecastResponse weather;
+  final WeatherData weather;
   final int activeItemIndex;
 
   const DetailsCard({
@@ -26,22 +21,18 @@ class DetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentWeather = weather.list[activeItemIndex];
+    final currentWeather = weather.data[activeItemIndex];
 
-    final weatherCondition = parseWeatherCode(currentWeather.weather[0].id);
-    final temperature = formatTemperature(currentWeather.main.temp);
-    final temperatureFeel = formatTemperature(currentWeather.main.feels_like);
+    final relatedDate = getRelatedDate(currentWeather.dateTime);
+    final fullDate = fullDateFormat.format(currentWeather.dateTime);
 
-    final countryName =
-        countryCodesToNames[weather.city.country] ?? weather.city.country;
-    final location = '$countryName, ${weather.city.name}';
+    final temperature = formatTemperature(currentWeather.temperature);
+    final temperatureFeel = formatTemperature(currentWeather.temperatureFeel);
 
-    final rawDateTime = parseUnixTimestamp(currentWeather.dt);
-    final fullDate = fullDateFormat.format(rawDateTime);
-    final relatedDate = getRelatedDate(rawDateTime);
+    final location = '${weather.location.country}, ${weather.location.city}';
 
-    final sunriseTime = formatSunTime(weather.city.sunrise);
-    final sunsetTime = formatSunTime(weather.city.sunset);
+    final sunriseTime = sunsetTimeFormat.format(weather.location.sunriseTime);
+    final sunsetTime = sunsetTimeFormat.format(weather.location.sunsetTime);
 
     return FrostedCard(
       child: Padding(
@@ -67,7 +58,7 @@ class DetailsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  weatherCondition.icon,
+                  currentWeather.weatherCondition.icon,
                   size: 80,
                 ),
                 const SizedBox(width: 8),
@@ -83,7 +74,7 @@ class DetailsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  weatherCondition.label,
+                  currentWeather.weatherCondition.label,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -127,14 +118,5 @@ class DetailsCard extends StatelessWidget {
       result = relatedDateDefaultFormat.format(dateTime);
     }
     return result;
-  }
-
-  String formatSunTime(int timestamp) {
-    final tzOffset = Duration(seconds: weather.city.timezone);
-    final dateTime = DateTime.fromMillisecondsSinceEpoch(
-      (timestamp) * 1000,
-      isUtc: true,
-    ).add(tzOffset);
-    return sunsetTimeFormat.format(dateTime);
   }
 }

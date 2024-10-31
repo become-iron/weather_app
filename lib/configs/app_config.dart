@@ -25,7 +25,7 @@ class AppConfig$WeatherService with _$AppConfig$WeatherService {
 final appConfig = AppConfig(
   weatherService: AppConfig$WeatherService(
     appId: dotenv.get('WEATHER_SERVICE_APP_ID'),
-    dataFormatVersion: '0',
+    dataFormatVersion: '1',
     dataFormatVersionStorageKey: 'dataFormatVersion',
     storageKey: 'weatherData',
   ),
