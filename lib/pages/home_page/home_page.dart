@@ -158,7 +158,8 @@ class _HomePageState extends State<HomePage> {
     final weather_ = await WeatherService.getWeatherData(
       position: position!,
       // TODO: temp
-      count: itemsNumber,
+      // detract 1 to consider the current weather as well
+      count: itemsNumber - 1,
     );
 
     setState(() {

@@ -128,8 +128,8 @@ class WeatherService {
     final String? formatVersion =
         await storage.getString(config.dataFormatVersionStorageKey);
     if (formatVersion != config.dataFormatVersion) {
-      logger.d('Stored weather data has different ($formatVersion) '
-          'format version than current one (${config.dataFormatVersion})');
+      logger.d('Stored weather data has a different ($formatVersion) '
+          'format version than the current one (${config.dataFormatVersion})');
       await storage.remove(config.storageKey);
       await _clearStoredWeatherData();
     }
