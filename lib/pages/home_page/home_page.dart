@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
-import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
-    show ForecastResponse;
+import 'package:weather_app/services/weather_service/models/weather_data.dart'
+    show WeatherData;
 import 'package:weather_app/services/weather_service/weather_service.dart'
     show WeatherService;
 import 'package:weather_app/utils/location.dart'
     show LocationException, checkLocationPermissions, determinePosition;
+import 'package:weather_app/utils/logger.dart' show logger;
 
 import 'widgets/details_card.dart' show DetailsCard;
 import 'widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
 import 'widgets/message_card.dart' show MessageCard;
 
-class HomePage extends StatefulWidget {
-  final WeatherService weatherService;
+typedef MessageData = ({Widget icon, String message});
 
-  const HomePage({super.key, required this.weatherService});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -24,13 +25,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   MessageData? message;
   Position? position;
-  ForecastResponse? weather;
+  WeatherData? weather;
   int activeWeatherItemIndex = 0;
 
   @override
   void initState() {
     super.initState();
     initStateAsync().catchError((e) {
+      logger.e('Error occurred during state initialization', error: e);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -78,7 +80,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // TODO: make it scrollable
       body: Container(
         // to get rid of the white area at the bottom of screen
         // when there a little number of items
@@ -97,10 +98,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         child:
+            // TODO: restrict refresh rate
             // disable refresh gesture if there is no position
             position == null
                 ? content
                 : RefreshIndicator(
+                    // TODO: display message on error
                     onRefresh: fetchWeather,
                     child: content,
                   ),
@@ -109,7 +112,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> initStateAsync() async {
-    final weather_ = await widget.weatherService.getCachedWeatherData();
+    final weather_ = await WeatherService.getCachedWeatherData();
     if (weather_ != null) {
       setState(() {
         weather = weather_;
@@ -120,7 +123,7 @@ class _HomePageState extends State<HomePage> {
       await checkLocationPermissions();
     } on LocationException catch (e) {
       setState(() {
-        message = MessageData(
+        message = (
           icon: const Icon(Symbols.error),
           message: e.message,
         );
@@ -130,8 +133,8 @@ class _HomePageState extends State<HomePage> {
 
     position = await handleLongTask(
       determinePosition(),
-      const MessageData(
-        icon: Icon(Symbols.pending),
+      const (
+        icon: PendingIcon(),
         message: 'We are trying to determine your location. '
             'This is taking longer than usual.',
       ),
@@ -139,8 +142,8 @@ class _HomePageState extends State<HomePage> {
 
     await handleLongTask(
       fetchWeather(),
-      const MessageData(
-        icon: Icon(Symbols.pending),
+      const (
+        icon: PendingIcon(),
         message: 'We are trying to request the weather. '
             'This is taking longer than usual.',
       ),
@@ -152,10 +155,11 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final weather_ = await widget.weatherService.getWeatherData(
+    final weather_ = await WeatherService.getWeatherData(
       position: position!,
       // TODO: temp
-      count: itemsNumber,
+      // detract 1 to consider the current weather as well
+      count: itemsNumber - 1,
     );
 
     setState(() {
@@ -206,12 +210,20 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MessageData {
-  final Widget icon;
-  final String message;
+class PendingIcon extends StatelessWidget {
+  const PendingIcon({super.key});
 
-  const MessageData({
-    required this.icon,
-    required this.message,
-  });
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 16,
+      height: 16,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+          strokeWidth: 2,
+        ),
+      ),
+    );
+  }
 }

@@ -2,11 +2,8 @@ import 'package:collection/collection.dart'
     show IterableExtension, IterableIterableExtension;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:weather_app/services/weather_service/models/five_day_forecast.dart'
-    show ForecastResponse;
-import 'package:weather_app/services/weather_service/utils.dart'
-    show parseWeatherCode;
-import 'package:weather_app/utils/time.dart' show parseUnixTimestamp;
+import 'package:weather_app/services/weather_service/models/weather_data.dart'
+    show WeatherData;
 import 'package:weather_app/utils/ui.dart' show formatTemperature;
 import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
@@ -17,20 +14,10 @@ const itemsNumber = rowsNumber * columnsNumbers;
 
 final dateTimeDisplayFormat = DateFormat.Hm();
 
-class WeatherData {
-  final String date;
-  final String temperature;
-  final IconData icon;
-
-  const WeatherData({
-    required this.date,
-    required this.temperature,
-    required this.icon,
-  });
-}
+typedef TileData = ({String date, String temperature, IconData icon});
 
 class ForecastingCard extends StatelessWidget {
-  final ForecastResponse weather;
+  final WeatherData weather;
   final int activeItemIndex;
   final void Function(int index) onActiveItemChange;
 
@@ -77,20 +64,19 @@ class ForecastingCard extends StatelessWidget {
     );
   }
 
-  Iterable<WeatherData> getGridItems() sync* {
-    for (final item in weather.list.sublist(0, itemsNumber)) {
-      final weatherCondition = parseWeatherCode(item.weather[0].id);
-      yield WeatherData(
-        date: dateTimeDisplayFormat.format(parseUnixTimestamp(item.dt)),
-        temperature: formatTemperature(item.main.temp),
-        icon: weatherCondition.icon,
+  Iterable<TileData> getGridItems() sync* {
+    for (final item in weather.data.sublist(0, itemsNumber)) {
+      yield (
+        date: dateTimeDisplayFormat.format(item.dateTime),
+        temperature: formatTemperature(item.temperature),
+        icon: item.weatherCondition.icon,
       );
     }
   }
 }
 
 class WeatherTile extends StatelessWidget {
-  final WeatherData data;
+  final TileData data;
   final bool active;
   final void Function() onActivate;
 
