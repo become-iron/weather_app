@@ -12,6 +12,8 @@ import 'widgets/details_card.dart' show DetailsCard;
 import 'widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
 import 'widgets/message_card.dart' show MessageCard;
 
+typedef MessageData = ({Widget icon, String message});
+
 class HomePage extends StatefulWidget {
   final WeatherService weatherService;
 
@@ -120,7 +122,7 @@ class _HomePageState extends State<HomePage> {
       await checkLocationPermissions();
     } on LocationException catch (e) {
       setState(() {
-        message = MessageData(
+        message = (
           icon: const Icon(Symbols.error),
           message: e.message,
         );
@@ -130,7 +132,7 @@ class _HomePageState extends State<HomePage> {
 
     position = await handleLongTask(
       determinePosition(),
-      const MessageData(
+      const (
         icon: Icon(Symbols.pending),
         message: 'We are trying to determine your location. '
             'This is taking longer than usual.',
@@ -139,7 +141,7 @@ class _HomePageState extends State<HomePage> {
 
     await handleLongTask(
       fetchWeather(),
-      const MessageData(
+      const (
         icon: Icon(Symbols.pending),
         message: 'We are trying to request the weather. '
             'This is taking longer than usual.',
@@ -204,14 +206,4 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
-}
-
-class MessageData {
-  final Widget icon;
-  final String message;
-
-  const MessageData({
-    required this.icon,
-    required this.message,
-  });
 }
