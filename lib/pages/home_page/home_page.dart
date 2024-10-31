@@ -7,6 +7,7 @@ import 'package:weather_app/services/weather_service/weather_service.dart'
     show WeatherService;
 import 'package:weather_app/utils/location.dart'
     show LocationException, checkLocationPermissions, determinePosition;
+import 'package:weather_app/utils/logger.dart' show logger;
 
 import 'widgets/details_card.dart' show DetailsCard;
 import 'widgets/forecasting_card.dart' show ForecastingCard, itemsNumber;
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initStateAsync().catchError((e) {
+      logger.e('Error occurred during state initialization', error: e);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -112,12 +114,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> initStateAsync() async {
-    // final weather_ = await widget.weatherService.getCachedWeatherData();
-    // if (weather_ != null) {
-    //   setState(() {
-    //     weather = weather_;
-    //   });
-    // }
+    final weather_ = await widget.weatherService.getCachedWeatherData();
+    if (weather_ != null) {
+      setState(() {
+        weather = weather_;
+      });
+    }
 
     try {
       await checkLocationPermissions();

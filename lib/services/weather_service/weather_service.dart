@@ -28,15 +28,6 @@ class WeatherService {
     }
   }
 
-  // Future<ForecastResponse?> getCachedWeatherData() async {
-  //   final config = appConfig.weatherService;
-  //   final storage = SharedPreferencesAsync();
-  //   final String? cachedData = await storage.getString(config.storageKey);
-  //   return cachedData == null
-  //       ? null
-  //       : ForecastResponse.fromJson(jsonDecode(cachedData));
-  // }
-
   // Docs: https://openweathermap.org/current
   Future<String> _getCurrentWeather({
     required Position position,
@@ -83,12 +74,28 @@ class WeatherService {
     );
   }
 
+  Future<WeatherData> getWeatherData({
+    required Position position,
+    int? count,
+  }) async {
+    final [current, forecast] = await Future.wait([
+      _getCurrentWeather(position: position),
+      _getForecast(position: position, count: count),
+    ]);
+    logger.d('Fetched weather data');
+    await _storeWeatherData(current: current, forecast: forecast);
+    final weatherData = _parseWeatherData(current: current, forecast: forecast);
+    logger.d('Parsed weather data');
+    return weatherData;
+  }
+
   Future<void> _storeWeatherData({
     required String current,
     required String forecast,
   }) async {
     final config = appConfig.weatherService;
     final storage = SharedPreferencesAsync();
+
     await storage.setString(
       config.storageKey,
       jsonEncode({
@@ -100,22 +107,31 @@ class WeatherService {
       config.dataFormatVersionStorageKey,
       config.dataFormatVersion,
     );
+
+    logger.d('Stored weather data');
   }
 
-  Future<WeatherData?> _restoreWeatherData({
-    required String current,
-    required String forecast,
-  }) async {
+  Future<void> _clearStoredWeatherData() async {
     final config = appConfig.weatherService;
     final storage = SharedPreferencesAsync();
+
+    await storage.remove(config.storageKey);
+    await storage.remove(config.dataFormatVersionStorageKey);
+
+    logger.d('Cleared stored weather data');
+  }
+
+  Future<WeatherData?> getCachedWeatherData() async {
+    final config = appConfig.weatherService;
+    final storage = SharedPreferencesAsync();
+
     final String? formatVersion =
         await storage.getString(config.dataFormatVersionStorageKey);
     if (formatVersion != config.dataFormatVersion) {
-      logger.d(
-        'Remove cached weather data since it has different format version. '
-        'Stored: $formatVersion. Current: ${config.dataFormatVersion}',
-      );
+      logger.d('Stored weather data has different ($formatVersion) '
+          'format version than current one (${config.dataFormatVersion})');
       await storage.remove(config.storageKey);
+      await _clearStoredWeatherData();
     }
 
     final data = await storage.getString(config.storageKey);
@@ -123,41 +139,21 @@ class WeatherService {
       return null;
     }
 
-    // FIXME: should fail on incorrect format
-    final {
-      'current': current,
-      'forecast': forecast,
-    } = jsonDecode(data) as Map<String, String>;
-
-    return _parseWeatherData(
-      current: current,
-      forecast: forecast,
-    );
-  }
-
-  Future<WeatherData> getWeatherData({
-    required Position position,
-    int? count,
-  }) async {
-    final [current, forecast] = await Future.wait([
-      _getCurrentWeather(position: position),
-      _getForecast(position: position, count: count),
-    ]);
-
-    await _storeWeatherData(current: current, forecast: forecast);
-
-    // final config = appConfig.weatherService;
-    // final storage = SharedPreferencesAsync();
-    // await storage.setString(config.storageKey, forecast);
-    // await storage.setString(
-    //   config.dataFormatVersionStorageKey,
-    //   config.dataFormatVersion,
-    // );
-
-    return _parseWeatherData(current: current, forecast: forecast);
-    // return WeatherData.create(
-    //   current: CurrentWeatherResponse.fromJson(jsonDecode(current)),
-    //   forecast: ForecastResponse.fromJson(jsonDecode(forecast)),
-    // );
+    try {
+      final {
+        'current': current as String,
+        'forecast': forecast as String,
+      } = jsonDecode(data);
+      final weatherData = _parseWeatherData(
+        current: current,
+        forecast: forecast,
+      );
+      logger.d('Restored weather data');
+      return weatherData;
+    } catch (e) {
+      logger.e('Stored weather data seems to have incorrect format', error: e);
+      await _clearStoredWeatherData();
+      return null;
+    }
   }
 }
