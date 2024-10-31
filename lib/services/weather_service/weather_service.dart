@@ -12,9 +12,9 @@ import 'models/five_day_forecast.dart' show ForecastResponse;
 import 'models/weather_data.dart' show WeatherData;
 
 class WeatherService {
-  final weatherServiceHost = 'api.openweathermap.org';
+  static const weatherServiceHost = 'api.openweathermap.org';
 
-  Future<void> init() async {
+  static Future<void> init() async {
     final config = appConfig.weatherService;
     final storage = SharedPreferencesAsync();
     final String? formatVersion =
@@ -29,7 +29,7 @@ class WeatherService {
   }
 
   // Docs: https://openweathermap.org/current
-  Future<String> _getCurrentWeather({
+  static Future<String> _getCurrentWeather({
     required Position position,
   }) async {
     final response = await http.get(Uri.https(
@@ -46,7 +46,7 @@ class WeatherService {
   }
 
   // Docs: https://openweathermap.org/forecast5
-  Future<String> _getForecast({
+  static Future<String> _getForecast({
     required Position position,
     int? count,
   }) async {
@@ -64,7 +64,7 @@ class WeatherService {
     return response.body;
   }
 
-  WeatherData _parseWeatherData({
+  static WeatherData _parseWeatherData({
     required String current,
     required String forecast,
   }) {
@@ -74,7 +74,7 @@ class WeatherService {
     );
   }
 
-  Future<WeatherData> getWeatherData({
+  static Future<WeatherData> getWeatherData({
     required Position position,
     int? count,
   }) async {
@@ -89,7 +89,7 @@ class WeatherService {
     return weatherData;
   }
 
-  Future<void> _storeWeatherData({
+  static Future<void> _storeWeatherData({
     required String current,
     required String forecast,
   }) async {
@@ -111,7 +111,7 @@ class WeatherService {
     logger.d('Stored weather data');
   }
 
-  Future<void> _clearStoredWeatherData() async {
+  static Future<void> _clearStoredWeatherData() async {
     final config = appConfig.weatherService;
     final storage = SharedPreferencesAsync();
 
@@ -121,7 +121,7 @@ class WeatherService {
     logger.d('Cleared stored weather data');
   }
 
-  Future<WeatherData?> getCachedWeatherData() async {
+  static Future<WeatherData?> getCachedWeatherData() async {
     final config = appConfig.weatherService;
     final storage = SharedPreferencesAsync();
 

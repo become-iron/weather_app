@@ -4,16 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/pages/home_page/home_page.dart';
-import 'package:weather_app/services/weather_service/weather_service.dart'
-    show WeatherService;
 
 const defaultTextColor = Color(0xFFD8F8EF);
 
 void main() async {
   await dotenv.load(fileName: '.env.local');
-
-  final weatherService = WeatherService();
-  await weatherService.init();
 
   LicenseRegistry.addLicense(() async* {
     // add licenses for fonts in use
@@ -21,13 +16,11 @@ void main() async {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  runApp(WeatherApp(weatherService: weatherService));
+  runApp(const WeatherApp());
 }
 
 class WeatherApp extends StatelessWidget {
-  final WeatherService weatherService;
-
-  const WeatherApp({super.key, required this.weatherService});
+  const WeatherApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +40,7 @@ class WeatherApp extends StatelessWidget {
           iconTheme: const IconThemeData(
             color: defaultTextColor,
           )),
-      home: HomePage(weatherService: weatherService),
+      home: const HomePage(),
     );
   }
 }

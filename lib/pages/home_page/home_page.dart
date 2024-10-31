@@ -16,9 +16,7 @@ import 'widgets/message_card.dart' show MessageCard;
 typedef MessageData = ({Widget icon, String message});
 
 class HomePage extends StatefulWidget {
-  final WeatherService weatherService;
-
-  const HomePage({super.key, required this.weatherService});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -114,7 +112,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> initStateAsync() async {
-    final weather_ = await widget.weatherService.getCachedWeatherData();
+    final weather_ = await WeatherService.getCachedWeatherData();
     if (weather_ != null) {
       setState(() {
         weather = weather_;
@@ -157,7 +155,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final weather_ = await widget.weatherService.getWeatherData(
+    final weather_ = await WeatherService.getWeatherData(
       position: position!,
       // TODO: temp
       count: itemsNumber,
