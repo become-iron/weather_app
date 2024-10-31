@@ -80,7 +80,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // TODO: make it scrollable
       body: Container(
         // to get rid of the white area at the bottom of screen
         // when there a little number of items
@@ -99,6 +98,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         child:
+            // TODO: restrict refresh rate
             // disable refresh gesture if there is no position
             position == null
                 ? content
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
     position = await handleLongTask(
       determinePosition(),
       const (
-        icon: Icon(Symbols.pending),
+        icon: PendingIcon(),
         message: 'We are trying to determine your location. '
             'This is taking longer than usual.',
       ),
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
     await handleLongTask(
       fetchWeather(),
       const (
-        icon: Icon(Symbols.pending),
+        icon: PendingIcon(),
         message: 'We are trying to request the weather. '
             'This is taking longer than usual.',
       ),
@@ -205,5 +205,23 @@ class _HomePageState extends State<HomePage> {
         message = null;
       });
     }
+  }
+}
+
+class PendingIcon extends StatelessWidget {
+  const PendingIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 16,
+      height: 16,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+          strokeWidth: 2,
+        ),
+      ),
+    );
   }
 }
