@@ -44,6 +44,37 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> children = [];
+
+    if (message != null) {
+      children.addAll([
+        MessageCard(
+          icon: message!.icon,
+          message: message!.message,
+        ),
+        const SizedBox(height: 24),
+      ]);
+    }
+
+    if (weather != null) {
+      children.addAll([
+        DetailsCard(
+          weather: weather!,
+          activeItemIndex: activeWeatherItemIndex,
+        ),
+        const SizedBox(height: 24),
+        ForecastingCard(
+          weather: weather!,
+          activeItemIndex: activeWeatherItemIndex,
+          onActiveItemChange: (index) {
+            setState(() {
+              activeWeatherItemIndex = index;
+            });
+          },
+        ),
+      ]);
+    }
+
     final content = SingleChildScrollView(
       // set physics to show refresh indicator
       // even if content is less than viewport
@@ -51,30 +82,7 @@ class _HomePageState extends State<HomePage> {
       physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (message != null)
-            MessageCard(
-              icon: message!.icon,
-              message: message!.message,
-            ),
-          // TODO: use skeletons
-          if (weather != null)
-            DetailsCard(
-              weather: weather!,
-              activeItemIndex: activeWeatherItemIndex,
-            ),
-          const SizedBox(height: 24),
-          if (weather != null)
-            ForecastingCard(
-              weather: weather!,
-              activeItemIndex: activeWeatherItemIndex,
-              onActiveItemChange: (index) {
-                setState(() {
-                  activeWeatherItemIndex = index;
-                });
-              },
-            ),
-        ],
+        children: children,
       ),
     );
 
