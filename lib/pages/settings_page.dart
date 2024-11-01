@@ -23,51 +23,45 @@ class SettingsPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Container(
-        // to get rid of the white area at the bottom of screen
-        // when there a little number of items
-        width: double.infinity,
-        height: double.infinity,
-        padding: EdgeInsets.fromLTRB(
-          16,
-          // consider the height of system status bar and app bar
-          16 + MediaQuery.viewPaddingOf(context).top + 52,
-          16,
-          16,
-        ),
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('images/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            FrostedCard(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('Setting 1'),
-              ),
+        child: const SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                FrostedCard(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text('Setting 1'),
+                  ),
+                ),
+                FrostedCard(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text('Setting 2'),
+                  ),
+                ),
+                FrostedCard(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text('Setting 3'),
+                  ),
+                ),
+                FrostedCard(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text('Setting 4'),
+                  ),
+                ),
+              ],
             ),
-            FrostedCard(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('Setting 2'),
-              ),
-            ),
-            FrostedCard(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('Setting 3'),
-              ),
-            ),
-            FrostedCard(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('Setting 4'),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

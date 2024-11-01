@@ -94,29 +94,27 @@ class _HomePageState extends State<HomePage> {
         // to get rid of the white area at the bottom of screen
         // when there a little number of items
         height: double.infinity,
-        padding: EdgeInsets.fromLTRB(
-          16,
-          // consider the height of system status bar
-          16 + MediaQuery.viewPaddingOf(context).top,
-          16,
-          16,
-        ),
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('images/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
-        child:
-            // TODO: restrict refresh rate
-            // disable refresh gesture if there is no position
-            position == null
-                ? content
-                : RefreshIndicator(
-                    // TODO: display message on error
-                    onRefresh: fetchWeather,
-                    child: content,
-                  ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child:
+                // disable refresh gesture if there is no position
+                position == null
+                    ? content
+                    // TODO: restrict refresh rate
+                    : RefreshIndicator(
+                        // TODO: display message on error
+                        onRefresh: fetchWeather,
+                        child: content,
+                      ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
