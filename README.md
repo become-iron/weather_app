@@ -73,7 +73,6 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 
 ## TODO
 
-* Use skeletons?
 * Make layout responsive
 * Add ability to change theme
 * Update icon

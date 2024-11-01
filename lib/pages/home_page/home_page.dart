@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
+import 'package:weather_app/pages/settings_page.dart';
 import 'package:weather_app/services/weather_service/models/weather_data.dart'
     show WeatherData;
 import 'package:weather_app/services/weather_service/weather_service.dart'
@@ -44,6 +45,39 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final List<Widget> children = [];
+
+    if (message != null) {
+      children.addAll([
+        MessageCard(
+          icon: message!.icon,
+          message: message!.message,
+        ),
+        const SizedBox(height: 24),
+      ]);
+    }
+
+    if (weather != null) {
+      children.addAll([
+        DetailsCard(
+          weather: weather!,
+          activeItemIndex: activeWeatherItemIndex,
+        ),
+        const SizedBox(height: 24),
+        ForecastingCard(
+          weather: weather!,
+          activeItemIndex: activeWeatherItemIndex,
+          onActiveItemChange: (index) {
+            setState(() {
+              activeWeatherItemIndex = index;
+            });
+          },
+        ),
+      ]);
+    }
+
     final content = SingleChildScrollView(
       // set physics to show refresh indicator
       // even if content is less than viewport
@@ -51,62 +85,49 @@ class _HomePageState extends State<HomePage> {
       physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (message != null)
-            MessageCard(
-              icon: message!.icon,
-              message: message!.message,
-            ),
-          // TODO: use skeletons
-          if (weather != null)
-            DetailsCard(
-              weather: weather!,
-              activeItemIndex: activeWeatherItemIndex,
-            ),
-          const SizedBox(height: 24),
-          if (weather != null)
-            ForecastingCard(
-              weather: weather!,
-              activeItemIndex: activeWeatherItemIndex,
-              onActiveItemChange: (index) {
-                setState(() {
-                  activeWeatherItemIndex = index;
-                });
-              },
-            ),
-        ],
+        children: children,
       ),
     );
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       body: Container(
-        // to get rid of the white area at the bottom of screen
-        // when there a little number of items
+        // to get rid of the area with default background
+        // at the bottom of screen when there a little number of items
         height: double.infinity,
-        padding: EdgeInsets.fromLTRB(
-          16,
-          // consider the height of system status bar
-          16 + MediaQuery.viewPaddingOf(context).top,
-          16,
-          16,
-        ),
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('images/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
-        child:
-            // TODO: restrict refresh rate
-            // disable refresh gesture if there is no position
-            position == null
-                ? content
-                : RefreshIndicator(
-                    // TODO: display message on error
-                    onRefresh: fetchWeather,
-                    child: content,
-                  ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child:
+                // disable refresh gesture if there is no position
+                position == null
+                    ? content
+                    // TODO: restrict refresh rate
+                    : RefreshIndicator(
+                        color: theme.colorScheme.inversePrimary,
+                        backgroundColor: theme.colorScheme.inverseSurface,
+                        // TODO: display message on error
+                        onRefresh: fetchWeather,
+                        child: content,
+                      ),
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SettingsPage(),
+            ),
+          );
+        },
+        child: const Icon(Symbols.settings),
       ),
     );
   }
@@ -215,12 +236,14 @@ class PendingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    final theme = Theme.of(context);
+
+    return SizedBox(
       width: 16,
       height: 16,
       child: Center(
         child: CircularProgressIndicator(
-          color: Colors.white,
+          color: theme.textTheme.bodyMedium?.color,
           strokeWidth: 2,
         ),
       ),
