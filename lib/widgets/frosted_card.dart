@@ -9,11 +9,8 @@ class FrostedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     // based on: https://www.youtube.com/watch?app=desktop&v=vIjyphym6Ck
     return Card(
-      color: theme.cardTheme.color!.withOpacity(0.8),
       child: child,
       // disable blur since it works incorrectly
       // with SingleChildScrollView and ListView

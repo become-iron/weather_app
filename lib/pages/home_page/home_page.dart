@@ -91,8 +91,8 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: Container(
-        // to get rid of the white area at the bottom of screen
-        // when there a little number of items
+        // to get rid of the area with default background
+        // at the bottom of screen when there a little number of items
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -109,6 +109,8 @@ class _HomePageState extends State<HomePage> {
                     ? content
                     // TODO: restrict refresh rate
                     : RefreshIndicator(
+                        color: theme.colorScheme.inversePrimary,
+                        backgroundColor: theme.colorScheme.inverseSurface,
                         // TODO: display message on error
                         onRefresh: fetchWeather,
                         child: content,
@@ -125,8 +127,6 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
-        backgroundColor: theme.cardTheme.color!.withOpacity(0.8),
-        foregroundColor: Colors.white,
         child: const Icon(Symbols.settings),
       ),
     );
@@ -236,12 +236,14 @@ class PendingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    final theme = Theme.of(context);
+
+    return SizedBox(
       width: 16,
       height: 16,
       child: Center(
         child: CircularProgressIndicator(
-          color: Colors.white,
+          color: theme.textTheme.bodyMedium?.color,
           strokeWidth: 2,
         ),
       ),

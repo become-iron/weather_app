@@ -6,20 +6,11 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: theme.cardTheme.color!.withOpacity(0.8),
-        leading: const BackButton(color: Colors.white),
-        title: Text(
-          'Settings',
-          style: TextStyle(
-            // fontWeight: FontWeight.w800,
-            color: theme.colorScheme.onPrimary,
-          ),
-        ),
+        leading: const BackButton(),
+        title: const Text('Settings'),
         centerTitle: true,
       ),
       body: Container(

@@ -53,9 +53,9 @@ class ForecastingCard extends StatelessWidget {
                   ],
                 ),
                 if (i < chunks.length - 1)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4, bottom: 4),
-                    child: Divider(color: Colors.white.withOpacity(0.5)),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 4, bottom: 4),
+                    child: Divider(),
                   ),
               ]
           ].flattened.toList(),
@@ -89,6 +89,7 @@ class WeatherTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final borderRadius = BorderRadius.circular(8);
 
     return ClipRRect(
@@ -98,7 +99,7 @@ class WeatherTile extends StatelessWidget {
         borderRadius: borderRadius,
         child: Container(
           padding: const EdgeInsets.all(8),
-          color: active ? Colors.white.withOpacity(0.1) : null,
+          color: active ? theme.splashColor.withOpacity(0.2) : null,
           child: Column(
             children: [
               Text(data.date),
