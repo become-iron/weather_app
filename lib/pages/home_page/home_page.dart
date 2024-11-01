@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
+import 'package:weather_app/pages/settings_page.dart';
 import 'package:weather_app/services/weather_service/models/weather_data.dart'
     show WeatherData;
 import 'package:weather_app/services/weather_service/weather_service.dart'
@@ -44,6 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final List<Widget> children = [];
 
     if (message != null) {
@@ -87,7 +90,6 @@ class _HomePageState extends State<HomePage> {
     );
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       body: Container(
         // to get rid of the white area at the bottom of screen
         // when there a little number of items
@@ -115,6 +117,19 @@ class _HomePageState extends State<HomePage> {
                     onRefresh: fetchWeather,
                     child: content,
                   ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SettingsPage(),
+            ),
+          );
+        },
+        backgroundColor: theme.cardTheme.color!.withOpacity(0.8),
+        foregroundColor: Colors.white,
+        child: const Icon(Symbols.settings),
       ),
     );
   }
