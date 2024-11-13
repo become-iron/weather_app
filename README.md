@@ -23,6 +23,7 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `freezed` with `json_serializable` - immutable serializable data models.
 * `shared_preferences` - persistent storage for simple data.
 * `logger` - logger.
+* `riverpod` - state management.
 
 #### Services
 
@@ -75,10 +76,15 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 ## TODO
 
 * Make layout responsive
-* Add ability to change theme
+* Themes:
+    * Adjust themes
+    * Add new ones
+    * Add licence data for background images
 * Update icon
 * Write tests
-* Use some library to manage app state?
+* State management (riverpod):
+  * Manage weather data by riverpod
+  * Setup linter (riverpod_lint)
 * Add animations when card appear/disappear?
 * Add CI
 * Add Licenses page
