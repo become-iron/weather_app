@@ -10,6 +10,10 @@ final ThemeSet meowTheme = (
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.pink,
     ),
+    cardTheme: CardTheme(
+      elevation: 0,
+      color: Colors.pink.shade300,
+    ),
   ),
   imageUri: 'images/background.jpg',
 );

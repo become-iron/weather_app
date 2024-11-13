@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ConsumerState, ConsumerStatefulWidget, ProviderScope;
+import 'package:weather_app/providers/theme.dart' show themeNotifierProvider;
 
-import 'configs/themes/themes.dart' show themes, defaultThemeId;
 import 'pages/home_page/home_page.dart' show HomePage;
 
 void main() async {
@@ -16,18 +18,25 @@ void main() async {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  runApp(const WeatherApp());
+  runApp(const ProviderScope(child: WeatherApp()));
 }
 
-class WeatherApp extends StatelessWidget {
+class WeatherApp extends ConsumerStatefulWidget {
   const WeatherApp({super.key});
 
   @override
+  ConsumerState<WeatherApp> createState() => _WeatherAppState();
+}
+
+class _WeatherAppState extends ConsumerState<WeatherApp> {
+  @override
   Widget build(BuildContext context) {
+    final theme = ref.watch(themeNotifierProvider).value;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Weather App',
-      theme: themes[defaultThemeId]!.theme,
+      theme: theme?.theme,
       home: const HomePage(),
     );
   }

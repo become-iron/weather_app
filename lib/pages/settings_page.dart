@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/widgets/frosted_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather_app/providers/theme.dart' show themeNotifierProvider;
+import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
-class SettingsPage extends StatelessWidget {
+import '../configs/themes/themes.dart' show themes;
+
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeNotifierProvider).value;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -20,34 +26,43 @@ class SettingsPage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: const SafeArea(
+        child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 FrostedCard(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 1'),
-                  ),
-                ),
-                FrostedCard(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 2'),
-                  ),
-                ),
-                FrostedCard(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 3'),
-                  ),
-                ),
-                FrostedCard(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 4'),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // const Text('Themes'),
+                        // const SizedBox(height: 12),
+                        DropdownMenu(
+                          expandedInsets: EdgeInsets.zero,
+                          initialSelection: theme?.id,
+                          // requestFocusOnTap: true,
+                          label: const Text('Theme'),
+                          onSelected: (String? themeId) {
+                            ref
+                                .read(themeNotifierProvider.notifier)
+                                .setTheme(themeId!);
+                          },
+                          dropdownMenuEntries: themes.values
+                              .map((theme) => DropdownMenuEntry(
+                                    value: theme.id,
+                                    label: theme.name,
+                                    // enabled: color.label != 'Grey',
+                                    // style: MenuItemButton.styleFrom(
+                                    //   foregroundColor: color.color,
+                                    // ),
+                                  ))
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
