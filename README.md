@@ -2,6 +2,14 @@
 
 A simple weather application.
 
+## Screenshots
+
+<!--suppress CheckImageSize -->
+<div>
+    <img src="docs/screenshots/home_1.jpg" alt="Home Page" width="300" />
+    <img src="docs/screenshots/home_2.jpg" alt="Home Page" width="300" />
+</div>
+
 ## Development
 
 Design: [Weather App | Template](https://www.figma.com/community/file/1177627357046864157).
@@ -23,6 +31,7 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `freezed` with `json_serializable` - immutable serializable data models.
 * `shared_preferences` - persistent storage for simple data.
 * `logger` - logger.
+* `riverpod` - state management.
 
 #### Services
 
@@ -33,6 +42,7 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `flutter analyze` - analyze the project's Dart code.
 * `dart fix --apply` - apply automated fixes to Dart source code.
 * `dart run build_runner build` - run build scripts (e.g., generate freezed models).
+* `dart run build_runner watch` - same as above, but in watch mode.
 * `flutter test` - run Flutter unit tests.
 * `flutter build apk --split-per-abi` - build APKs.
 
@@ -74,9 +84,15 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 ## TODO
 
 * Make layout responsive
-* Add ability to change theme
+* Themes:
+    * Adjust themes
+    * Add new ones
+    * Add licence data for background images
 * Update icon
 * Write tests
-* Use some library to manage app state?
+* State management (riverpod):
+  * Manage weather data by riverpod
+  * Setup linter (riverpod_lint)
 * Add animations when card appear/disappear?
 * Add CI
+* Add Licenses page

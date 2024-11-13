@@ -14,20 +14,6 @@ import 'models/weather_data.dart' show WeatherData;
 class WeatherService {
   static const weatherServiceHost = 'api.openweathermap.org';
 
-  static Future<void> init() async {
-    final config = appConfig.weatherService;
-    final storage = SharedPreferencesAsync();
-    final String? formatVersion =
-        await storage.getString(config.dataFormatVersionStorageKey);
-    if (formatVersion != config.dataFormatVersion) {
-      logger.d(
-        'Remove cached weather data since it has different format version. '
-        'Stored: $formatVersion. Current: ${config.dataFormatVersion}',
-      );
-      await storage.remove(config.storageKey);
-    }
-  }
-
   // Docs: https://openweathermap.org/current
   static Future<String> _getCurrentWeather({
     required Position position,

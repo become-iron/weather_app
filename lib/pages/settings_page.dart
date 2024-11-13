@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/widgets/frosted_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather_app/providers/theme.dart' show themeNotifierProvider;
+import 'package:weather_app/widgets/frosted_card.dart' show FrostedCard;
 
-class SettingsPage extends StatelessWidget {
+import '../configs/themes/themes.dart' show themes;
+
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeSet = ref.watch(themeNotifierProvider).value;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -14,40 +20,44 @@ class SettingsPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/background.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: const SafeArea(
+        decoration: themeSet == null
+            ? null
+            : BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(themeSet.imageUri),
+                  fit: BoxFit.cover,
+                ),
+              ),
+        child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 FrostedCard(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 1'),
-                  ),
-                ),
-                FrostedCard(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 2'),
-                  ),
-                ),
-                FrostedCard(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 3'),
-                  ),
-                ),
-                FrostedCard(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Setting 4'),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        DropdownMenu(
+                          expandedInsets: EdgeInsets.zero,
+                          initialSelection: themeSet?.id,
+                          label: const Text('Theme'),
+                          onSelected: (String? themeId) {
+                            ref
+                                .read(themeNotifierProvider.notifier)
+                                .setTheme(themeId!);
+                          },
+                          dropdownMenuEntries: themes.values
+                              .map((theme) => DropdownMenuEntry(
+                                    value: theme.id,
+                                    label: theme.name,
+                                  ))
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

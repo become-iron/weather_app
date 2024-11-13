@@ -3,42 +3,11 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
-import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ConsumerState, ConsumerStatefulWidget, ProviderScope;
+import 'package:weather_app/providers/theme.dart' show themeNotifierProvider;
 
 import 'pages/home_page/home_page.dart' show HomePage;
-
-const defaultTextColor = Color(0xFFD8F8EF);
-const baseColor = Color(0xFF40666A);
-final surfaceColor = baseColor.withOpacity(0.8);
-
-final theme = ThemeData(
-  useMaterial3: true,
-  brightness: Brightness.dark,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: baseColor,
-    brightness: Brightness.dark,
-  ),
-  textTheme: GoogleFonts.poppinsTextTheme().apply(
-    bodyColor: defaultTextColor,
-  ),
-  cardTheme: CardTheme(
-    elevation: 0,
-    color: surfaceColor,
-  ),
-  iconTheme: const IconThemeData(
-    color: defaultTextColor,
-  ),
-  appBarTheme: AppBarTheme(
-    color: surfaceColor,
-  ),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
-    backgroundColor: surfaceColor,
-    foregroundColor: defaultTextColor,
-  ),
-  dividerTheme: DividerThemeData(
-    color: defaultTextColor.withOpacity(0.5),
-  ),
-);
 
 void main() async {
   await dotenv.load(fileName: '.env.local');
@@ -49,18 +18,25 @@ void main() async {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  runApp(const WeatherApp());
+  runApp(const ProviderScope(child: WeatherApp()));
 }
 
-class WeatherApp extends StatelessWidget {
+class WeatherApp extends ConsumerStatefulWidget {
   const WeatherApp({super.key});
 
   @override
+  ConsumerState<WeatherApp> createState() => _WeatherAppState();
+}
+
+class _WeatherAppState extends ConsumerState<WeatherApp> {
+  @override
   Widget build(BuildContext context) {
+    final themeSet = ref.watch(themeNotifierProvider).value;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Weather App',
-      theme: theme,
+      theme: themeSet?.theme,
       home: const HomePage(),
     );
   }
