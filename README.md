@@ -2,6 +2,14 @@
 
 A simple weather application.
 
+## Screenshots
+
+<!--suppress CheckImageSize -->
+<div>
+    <img src="docs/screenshots/home_1.jpg" alt="Home Page" width="300" />
+    <img src="docs/screenshots/home_2.jpg" alt="Home Page" width="300" />
+</div>
+
 ## Development
 
 Design: [Weather App | Template](https://www.figma.com/community/file/1177627357046864157).
