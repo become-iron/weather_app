@@ -8,6 +8,7 @@ part 'app_config.freezed.dart';
 @freezed
 class AppConfig with _$AppConfig {
   const factory AppConfig({
+    required String themeStorageKey,
     required AppConfig$WeatherService weatherService,
   }) = _AppConfig;
 }
@@ -23,6 +24,7 @@ class AppConfig$WeatherService with _$AppConfig$WeatherService {
 }
 
 final appConfig = AppConfig(
+  themeStorageKey: 'theme',
   weatherService: AppConfig$WeatherService(
     appId: dotenv.get('WEATHER_SERVICE_APP_ID'),
     dataFormatVersion: '1',
