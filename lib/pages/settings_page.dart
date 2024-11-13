@@ -40,12 +40,9 @@ class SettingsPage extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // const Text('Themes'),
-                        // const SizedBox(height: 12),
                         DropdownMenu(
                           expandedInsets: EdgeInsets.zero,
                           initialSelection: themeSet?.id,
-                          // requestFocusOnTap: true,
                           label: const Text('Theme'),
                           onSelected: (String? themeId) {
                             ref
@@ -56,10 +53,6 @@ class SettingsPage extends ConsumerWidget {
                               .map((theme) => DropdownMenuEntry(
                                     value: theme.id,
                                     label: theme.name,
-                                    // enabled: color.label != 'Grey',
-                                    // style: MenuItemButton.styleFrom(
-                                    //   foregroundColor: color.color,
-                                    // ),
                                   ))
                               .toList(),
                         ),
