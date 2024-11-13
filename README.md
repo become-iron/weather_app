@@ -33,6 +33,7 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * `flutter analyze` - analyze the project's Dart code.
 * `dart fix --apply` - apply automated fixes to Dart source code.
 * `dart run build_runner build` - run build scripts (e.g., generate freezed models).
+* `dart run build_runner watch` - same as above, but in watch mode.
 * `flutter test` - run Flutter unit tests.
 * `flutter build apk --split-per-abi` - build APKs.
 
@@ -80,3 +81,4 @@ Design: [Weather App | Template](https://www.figma.com/community/file/1177627357
 * Use some library to manage app state?
 * Add animations when card appear/disappear?
 * Add CI
+* Add Licenses page
