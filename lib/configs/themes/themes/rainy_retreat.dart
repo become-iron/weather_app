@@ -38,5 +38,5 @@ ThemeSet rainyRetreatTheme = (
       color: defaultTextColor.withOpacity(0.5),
     ),
   ),
-  imageUri: 'images/background.jpg',
+  imageUri: 'images/rainy_retreat.jpg',
 );

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../types.dart';
 
-final ThemeSet meowTheme = (
-  id: 'meow',
-  name: 'Meow',
+final ThemeSet frostedPathsTheme = (
+  id: 'frosted_paths',
+  name: 'Frosted Paths',
   theme: ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
@@ -15,5 +15,5 @@ final ThemeSet meowTheme = (
       color: Colors.pink.shade300,
     ),
   ),
-  imageUri: 'images/background.jpg',
+  imageUri: 'images/frosted_paths.jpg',
 );

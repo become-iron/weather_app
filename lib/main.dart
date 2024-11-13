@@ -31,12 +31,12 @@ class WeatherApp extends ConsumerStatefulWidget {
 class _WeatherAppState extends ConsumerState<WeatherApp> {
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeNotifierProvider).value;
+    final themeSet = ref.watch(themeNotifierProvider).value;
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Weather App',
-      theme: theme?.theme,
+      theme: themeSet?.theme,
       home: const HomePage(),
     );
   }

@@ -10,7 +10,7 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeNotifierProvider).value;
+    final themeSet = ref.watch(themeNotifierProvider).value;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -20,12 +20,14 @@ class SettingsPage extends ConsumerWidget {
         centerTitle: true,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/background.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: themeSet == null
+            ? null
+            : BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(themeSet.imageUri),
+                  fit: BoxFit.cover,
+                ),
+              ),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -42,7 +44,7 @@ class SettingsPage extends ConsumerWidget {
                         // const SizedBox(height: 12),
                         DropdownMenu(
                           expandedInsets: EdgeInsets.zero,
-                          initialSelection: theme?.id,
+                          initialSelection: themeSet?.id,
                           // requestFocusOnTap: true,
                           label: const Text('Theme'),
                           onSelected: (String? themeId) {

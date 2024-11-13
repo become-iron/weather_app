@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ConsumerStatefulWidget, ConsumerState;
 import 'package:geolocator/geolocator.dart' show Position;
 import 'package:material_symbols_icons/symbols.dart' show Symbols;
 import 'package:weather_app/pages/settings_page.dart';
+import 'package:weather_app/providers/theme.dart' show themeNotifierProvider;
 import 'package:weather_app/services/weather_service/models/weather_data.dart'
     show WeatherData;
 import 'package:weather_app/services/weather_service/weather_service.dart'
@@ -16,14 +19,14 @@ import 'widgets/message_card.dart' show MessageCard;
 
 typedef MessageData = ({Widget icon, String message});
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   MessageData? message;
   Position? position;
   WeatherData? weather;
@@ -45,6 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeSet = ref.watch(themeNotifierProvider).value;
     final theme = Theme.of(context);
 
     final List<Widget> children = [];
@@ -94,12 +98,14 @@ class _HomePageState extends State<HomePage> {
         // to get rid of the area with default background
         // at the bottom of screen when there a little number of items
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/background.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: (themeSet == null)
+            ? null
+            : BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(themeSet.imageUri),
+                  fit: BoxFit.cover,
+                ),
+              ),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
